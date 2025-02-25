@@ -1,0 +1,104 @@
+{
+  "_version": "1.58.0",
+  "sap.app": {
+    "id": "ui5.EstudioFacil",
+    "i18n": "i18n/i18n.properties",
+    "type": "application",
+    "applicationVersion": {
+      "version": "1.0.0"
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "rootView": {
+      "viewName": "ui5.EstudioFacil.app.App",
+      "type": "XML",
+      "async": true,
+      "id": "app"
+    },
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.ui.core": {},
+        "sap.m": {}
+      }
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "ui5.EstudioFacil.i18n.i18n",
+          "supportedLocales": [
+            ""
+          ],
+          "fallbackLocale": ""
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router",
+        "type": "View",
+        "viewType": "XML",
+        "path": "ui5.EstudioFacil.app",
+        "controlId": "app",
+        "controlAggregation": "pages",
+        "transition": "slide",
+        "bypassed": {
+          "target": "notFound"
+        },
+        "async": true
+      },
+      "routes": [
+        {
+          "pattern": "",
+          "name": "appListagemEstudio",
+          "target": "listagemEstudio"
+        },
+        {
+          "pattern": "AdicionarEstudio/:estudioId:",
+          "name": "appAdicionarEstudio",
+          "target": "adicionarEstudio"
+        },
+        {
+          "pattern": "DetalhesEstudio/{estudioId}",
+          "name": "appDetalhesEstudio",
+          "target": "detalhesEstudio"
+        }
+      ],
+      "targets": {
+        "listagemEstudio": {
+          "path": "ui5.EstudioFacil.app.listagemEstudio",
+          "id": "listagemEstudio",
+          "name": "ListagemEstudio",
+          "level": 1
+        },
+        "notFound": {
+          "path": "ui5.EstudioFacil.app.notFound",
+          "id": "notFound",
+          "name": "NotFound",
+          "transition": "show"
+        },
+        "adicionarEstudio": {
+          "path": "ui5.EstudioFacil.app.adicionarEstudio",
+          "id": "adicionarEstudio",
+          "name": "AdicionarEstudio",
+          "transition": "show"
+        },
+        "detalhesEstudio": {
+          "path": "ui5.EstudioFacil.app.detalhesEstudio",
+          "id": "detalhesEstudio",
+          "name": "DetalhesEstudio",
+          "transition": "show"
+        }
+      }
+    }
+  }
+}

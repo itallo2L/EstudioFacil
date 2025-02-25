@@ -1,0 +1,15 @@
+<mvc:View
+   controllerName="ui5.EstudioFacil.app.notFound.NotFound"
+   xmlns="sap.m"
+   xmlns:mvc="sap.ui.core.mvc">
+	<Toolbar>
+      <Button id= "retornarParaPaginaAnterior" type= "Back" press=".onNavBack"/>
+         <ToolbarSpacer/>
+      <Button id= "retornarParaPaginaInicial" text="{i18n>retornarParaPaginaInicial}" type= "Transparent" press=".aoClicarPaginaInicial"/>
+   </Toolbar>
+   <MessagePage
+      showHeader="false"
+      title="{i18n>paginaNaoEncontrada}"
+      text="{i18n>paginaNaoEncontrada.texto}"
+      description="{i18n>paginaNaoEncontrada.descricao}"/>
+</mvc:View>

@@ -1,0 +1,49 @@
+<mvc:View
+   controllerName="ui5.EstudioFacil.app.adicionarEstudio.AdicionarEstudio"
+   xmlns="sap.m"
+   xmlns:f="sap.ui.layout.form"
+   xmlns:mvc="sap.ui.core.mvc">
+   <Page>
+      <customHeader>
+         <Toolbar>
+            <Button id= "idRetornarParaPaginaAnterior" type= "Back" press=".onNavBack"/>
+            <ToolbarSpacer/>
+         </Toolbar>
+      </customHeader>
+      <FlexBox class="sapUiResponsiveMargin" justifyContent="SpaceBetween" direction="Column" backgroundDesign="Translucent">
+         <f:SimpleForm 
+            maxContainerCols="2"
+            editable="true"
+            layout="ResponsiveGridLayout"
+            labelSpanL="1" labelSpanM="1"
+            emptySpanL="8" emptySpanM="8"
+            columnsL="1" columnsM="1">
+            <f:toolbar> 
+               <OverflowToolbar>
+                  <Title id="idTituloAdicionarEditar" text="{i18n>adicionarEstudio.titulo}" titleStyle="H3" class="sapUiResponsiveMargin"/>
+                  <ToolbarSpacer/>
+                  <Button id="idBotaoSalvarEstudio" text="{i18n>adicionarEstudio.botaoSalvar}" press=".aoClicarSalvarEstudio"/>
+                  <Button id="idBotaoCancelarAdicaoEstudio" text="{i18n>adicionarEstudio.botaoCancelar}" press=".aoClicarCancelarEstudio" ariaHasPopup="Dialog"/>
+               </OverflowToolbar>
+            </f:toolbar>
+            <f:content>
+               <FlexBox class="sapUiResponsiveMargin" justifyContent="SpaceBetween" direction="Row" alignItems="Center" width="350px">
+                  <Label text="{i18n>nomeEstudio}" required="true"/>
+                  <Input id="idInputEstudio" required="true" placeholder="Estúdio"
+                  valueStateText="O Campo nome é obrigatório, máximo de 25 caracteres."
+                  value="{
+                     path: '#',
+                     type: 'sap.ui.model.type.String',
+                     constraints: {
+                        minLength: 1,
+                        maxLength: 25
+                     }}"
+                     change=".aoClicarAdicionarEstudio"/>
+                  <Label text="{i18n>adicionarEstudio.checkBoxEstaAberto}" required="false"/>
+                  <CheckBox id="idCheckBoxEstaAberto" />
+               </FlexBox>
+            </f:content>
+         </f:SimpleForm>
+      </FlexBox>
+   </Page>
+</mvc:View>
