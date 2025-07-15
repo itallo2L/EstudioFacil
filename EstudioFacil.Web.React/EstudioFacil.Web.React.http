@@ -1,0 +1,6 @@
+@EstudioFacil.Web.React_HostAddress = http://localhost:5049
+
+GET {{EstudioFacil.Web.React_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

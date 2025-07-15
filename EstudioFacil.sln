@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioFacil.Infra", "Estud
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EstudioFacil.Servico", "EstudioFacil.Servico\EstudioFacil.Servico.csproj", "{ADAF73C4-DE87-4A9D-B625-C52C1306D8AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EstudioFacil.Web.React", "EstudioFacil.Web.React\EstudioFacil.Web.React.csproj", "{DA898267-70F9-4165-9167-6714C4C241A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{ADAF73C4-DE87-4A9D-B625-C52C1306D8AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ADAF73C4-DE87-4A9D-B625-C52C1306D8AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ADAF73C4-DE87-4A9D-B625-C52C1306D8AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA898267-70F9-4165-9167-6714C4C241A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA898267-70F9-4165-9167-6714C4C241A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA898267-70F9-4165-9167-6714C4C241A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA898267-70F9-4165-9167-6714C4C241A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
