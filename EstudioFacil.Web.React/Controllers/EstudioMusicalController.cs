@@ -19,7 +19,8 @@ namespace EstudioFacil.Web.React.Controllers
         [HttpGet]
         public IActionResult ObterTodos([FromQuery] FiltroEstudioMusical filtro)
         {
-            return Ok(_servicoEstudioMusical.ObterTodos(filtro));
+            var estudios = _servicoEstudioMusical.ObterTodos(filtro);
+            return Ok(estudios);
         }
 
         [HttpGet("{id}")]
