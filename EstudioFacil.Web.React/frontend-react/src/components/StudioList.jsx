@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { ChevronRightIcon } from "lucide-react";
+import { Modal } from "../components/Modal"
+import StudioDetails from "../pages/StudioDetails"
+import Status from "../components/Status"
 
 function StudioList() {
     const [studios, setStudios] = useState([
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
 
-    const navigate = useNavigate();
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedStudio, setSelectedStudio] = useState(null);
 
     function onSeeDetailsClick(studio) {
-        navigate(`/studio-details?id=${studio.id}`);
+        setSelectedStudio(studio);
+        setIsModalOpen(true);
     };
 
     useEffect(() => {
@@ -62,8 +65,8 @@ function StudioList() {
             {/* Conteúdo abaixo */}
             <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-slate-200 rounded-b-lg">
                 <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-slate-200 rounded-t-xl">
-                    <text
-                        className="w-full items-start p-2 font-bold text-3xl">Lista de Estúdios ({filteredStudios.length})</text>
+                    <p
+                        className="w-full items-start p-2 font-bold text-3xl">Lista de Estúdios ({filteredStudios.length})</p>
                     <div className="flex w-full justify-end space-x-2 p-2 ">
                         <select
                             className="p-2 rounded-md font-bold"
@@ -82,7 +85,7 @@ function StudioList() {
                             onChange={e => setSearch(e.target.value)} />
 
                         <button
-                            className="bg-slate-400 text-white p-2 rounded-md"
+                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-slate-500"
                             onClick={() => alert("Abrir modal de cadastro")}>
                             Adicionar
                         </button>
@@ -93,17 +96,21 @@ function StudioList() {
                     {filteredStudios.map(studio => (
                         <li key={studio.id} className="flex p-1">
                             {/* Nome do estúdio */}
-                            <div className="w-full flex flex-col items-start bg-slate-300 p-2 rounded-s-md">
-                                <text className="text-xl font-bold rounded-s-md">{studio.nome}</text>
-                                <text>{studio.estaAberto ? "Aberto" : "Fechado"}</text>
-                            </div>
-                            <button className="bg-slate-300 p-2 rounded-e-md"
+                            <div className="w-full flex flex-col items-start bg-slate-300 p-2 rounded-md hover:bg-slate-500"
                                 onClick={() => onSeeDetailsClick(studio)}>
-                                <ChevronRightIcon />
-                            </button>
+                                <p className="text-xl font-bold rounded-s-md">{studio.nome}</p>
+                                <Status isOpenStudioOnList={studio.estaAberto}></Status>
+                            </div>
                         </li>
                     ))}
                 </ul>
+                <Modal isOpen={isModalOpen}>
+                    {selectedStudio && (
+                        <StudioDetails
+                            studio={selectedStudio}
+                            closeModal={() => setIsModalOpen(false)} />
+                    )}
+                </Modal>
             </div>
         </div>
     );
