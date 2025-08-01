@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Modal } from "../components/Modal"
-import StudioDetails from "./StudioDetails"
+import { ModalDetails } from "../components/ModalDetails"
+import ModalAddStudio from "../components/ModalAddStudio"
 import Status from "../components/Status"
 
 function StudioList() {
@@ -8,12 +8,17 @@ function StudioList() {
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
+    const [isModalAdditionOpen, setIsModalAdditionOpen] = useState(false);
     const [selectedStudio, setSelectedStudio] = useState(null);
 
     function onSeeDetailsClick(studio) {
         setSelectedStudio(studio);
-        setIsModalOpen(true);
+        setIsModalDetailsOpen(true);
+    };
+
+    function onAddStudioClick() {
+        setIsModalAdditionOpen(true);
     };
 
     useEffect(() => {
@@ -53,7 +58,6 @@ function StudioList() {
         return statusMatch && searchMatch;
     });
 
-
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
@@ -69,7 +73,7 @@ function StudioList() {
                         className="w-full items-start p-2 font-bold text-3xl">Lista de Estúdios ({filteredStudios.length})</p>
                     <div className="flex w-full justify-end space-x-2 p-2 ">
                         <select
-                            className="p-2 rounded-md font-bold"
+                            className="p-2 rounded-md font-bold border border-gray-400"
                             value={filter}
                             onChange={e => setFilter(e.target.value)}>
                             <option value="Todos">Todos</option>
@@ -78,15 +82,15 @@ function StudioList() {
                         </select>
 
                         <input
-                            className="w-full p-2 rounded-md"
+                            className="w-full p-2 rounded-md border border-gray-400"
                             type="text"
                             placeholder="Nome do estúdio..."
                             value={search}
                             onChange={e => setSearch(e.target.value)} />
 
                         <button
-                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-slate-500"
-                            onClick={() => alert("Abrir modal de cadastro")}>
+                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-slate-500 w-40"
+                            onClick={() => onAddStudioClick()}>
                             Adicionar
                         </button>
                     </div>
@@ -104,13 +108,15 @@ function StudioList() {
                         </li>
                     ))}
                 </ul>
-                <Modal isOpen={isModalOpen}>
-                    {selectedStudio && (
-                        <StudioDetails
-                            studio={selectedStudio}
-                            closeModal={() => setIsModalOpen(false)} />
-                    )}
-                </Modal>
+                <ModalDetails isOpen={isModalDetailsOpen}
+                    studio={selectedStudio}
+                    closeModal={() => setIsModalDetailsOpen(false)}>
+                    {/* {selectedStudio} */}
+                </ModalDetails>
+                <ModalAddStudio
+                    isOpen={isModalAdditionOpen}
+                    closeModal={() => setIsModalAdditionOpen(false)}>
+                </ModalAddStudio>
             </div>
         </div>
     );
