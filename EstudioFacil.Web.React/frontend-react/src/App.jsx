@@ -1,4 +1,4 @@
-import StudioList from './components/StudioList';
+import StudioList from './pages/StudioList';
 
 function App() {
   return (

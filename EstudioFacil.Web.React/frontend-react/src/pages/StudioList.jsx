@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal } from "../components/Modal"
-import StudioDetails from "../pages/StudioDetails"
+import StudioDetails from "./StudioDetails"
 import Status from "../components/Status"
 
 function StudioList() {
