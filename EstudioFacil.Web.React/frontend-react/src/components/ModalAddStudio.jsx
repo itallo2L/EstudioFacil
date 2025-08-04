@@ -39,11 +39,10 @@ function ModalAddStudio({ isOpen, closeModal }) {
                                 type="text" />
                         </div>
                         <div className="flex items-center mb-3">
-                            <label className="p-2 font-bold text-xl">Está aberto:
-                                <input
-                                    type="checkbox"
-                                    className="p-2 size-5 rounded-md ml-2 border-gray-400" />
-                            </label>
+                            <p className="p-2 h-8 flex items-center font-bold text-xl">Está aberto:</p>
+                            <input
+                                type="checkbox"
+                                className="p-2 size-5 rounded-md mt-1 ml-2 border-gray-400" />
                         </div>
                     </div>
                 </div>
