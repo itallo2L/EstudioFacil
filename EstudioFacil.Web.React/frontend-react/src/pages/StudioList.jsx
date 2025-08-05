@@ -51,6 +51,8 @@ function StudioList() {
             );
             const data = await response.json();
 
+            data.sort((a, b) => b.id - a.id);
+
             setStudios(data);
         };
         fetchStudios();
