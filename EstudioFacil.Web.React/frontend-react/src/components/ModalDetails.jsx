@@ -1,7 +1,7 @@
 import { X, Trash2Icon, Pencil } from "lucide-react";
 import Status from "./Status"
 
-export function ModalDetails({ isOpen, studio, closeModal, onStudioDelete }) {
+export function ModalDetails({ isOpen, studio, closeModal, onStudioDelete, onEditStudioClick }) {
     if (!isOpen) return null;
 
     const onDeleteStudio = async (id) => {
@@ -46,7 +46,7 @@ export function ModalDetails({ isOpen, studio, closeModal, onStudioDelete }) {
                         </button>
                         <button
                             className="bg-slate-400 text-white p-2 rounded-md hover:bg-green-400"
-                            onClick={() => alert("Editar não implementado")}
+                            onClick={() => onEditStudioClick()}
                         >
                             <Pencil />
                         </button>

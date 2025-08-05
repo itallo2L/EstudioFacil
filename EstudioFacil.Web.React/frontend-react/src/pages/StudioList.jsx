@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ModalDetails } from "../components/ModalDetails"
 import ModalAddStudio from "../components/ModalAddStudio"
+import ModalEditStudio from "../components/ModalEditStudio"
 import Status from "../components/Status"
 
 function StudioList() {
@@ -10,6 +11,7 @@ function StudioList() {
 
     const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
     const [isModalAdditionOpen, setIsModalAdditionOpen] = useState(false);
+    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [selectedStudio, setSelectedStudio] = useState(null);
 
     function onSeeDetailsClick(studio) {
@@ -21,8 +23,20 @@ function StudioList() {
         setIsModalAdditionOpen(true);
     };
 
+    function onEditStudioClick() {
+        setIsModalEditOpen(true);
+    };
+
     const addStudioToList = (newStudio) => {
         setStudios(prevStudios => [newStudio, ...prevStudios]);
+    };
+
+    const updatedStudioList = (editedStudio) => {
+        const listWithUpdatedStudios = studios.map(studio => studio.id === editedStudio.id ? {
+            ...studio, nome: editedStudio.nome, estaAberto: editedStudio.estaAberto
+        } : studio);
+        setStudios(listWithUpdatedStudios);
+        setIsModalDetailsOpen(false);
     };
 
     const deleteStudioFromList = (deletedStudio) => {
@@ -128,7 +142,8 @@ function StudioList() {
                     studio={selectedStudio}
                     closeModal={() => setIsModalDetailsOpen(false)}
                     onStudioDelete={deleteStudioFromList}
-                    onReloadStudios={reloadStudios}>
+                    onReloadStudios={reloadStudios}
+                    onEditStudioClick={onEditStudioClick}>
                 </ModalDetails>
                 <ModalAddStudio
                     isOpen={isModalAdditionOpen}
@@ -136,6 +151,12 @@ function StudioList() {
                     onStudioAdded={addStudioToList}
                     onReloadStudios={reloadStudios}>
                 </ModalAddStudio>
+                <ModalEditStudio
+                    isOpen={isModalEditOpen}
+                    studio={selectedStudio}
+                    closeModal={() => setIsModalEditOpen(false)}
+                    onStudioEdited={updatedStudioList}>
+                </ModalEditStudio>
             </div>
         </div>
     );
