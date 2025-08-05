@@ -25,6 +25,11 @@ function StudioList() {
         setStudios(prevStudios => [newStudio, ...prevStudios]);
     };
 
+    const deleteStudioFromList = (deletedStudio) => {
+        const newStudioList = studios.filter(studio => studio.id !== deletedStudio.id);
+        setStudios(newStudioList);
+    };
+
     const reloadStudios = async () => {
         try {
             const response = await fetch("https://localhost:7144/api/EstudioMusical", {
@@ -121,7 +126,9 @@ function StudioList() {
                 </ul>
                 <ModalDetails isOpen={isModalDetailsOpen}
                     studio={selectedStudio}
-                    closeModal={() => setIsModalDetailsOpen(false)}>
+                    closeModal={() => setIsModalDetailsOpen(false)}
+                    onStudioDelete={deleteStudioFromList}
+                    onReloadStudios={reloadStudios}>
                 </ModalDetails>
                 <ModalAddStudio
                     isOpen={isModalAdditionOpen}

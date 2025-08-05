@@ -1,8 +1,23 @@
 import { X, Trash2Icon, Pencil } from "lucide-react";
 import Status from "./Status"
 
-export function ModalDetails({ isOpen, studio, closeModal }) {
+export function ModalDetails({ isOpen, studio, closeModal, onStudioDelete }) {
     if (!isOpen) return null;
+
+    const onDeleteStudio = async (id) => {
+        try {
+            await fetch(`https://localhost:7144/api/EstudioMusical/${id}`, {
+                method: "DELETE"
+            });
+        } catch (error) {
+            const mensagemDeErro = "Erro ao deletar Estúdio";
+            alert(mensagemDeErro);
+            console.error(mensagemDeErro, error);
+        };
+
+        closeModal();
+        onStudioDelete(studio);
+    };
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -24,13 +39,13 @@ export function ModalDetails({ isOpen, studio, closeModal }) {
 
                     <div className="flex space-x-2 p-2 justify-end flex-1">
                         <button
-                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-slate-500"
-                            onClick={() => alert("Deletar não implementado")}
+                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-red-400"
+                            onClick={() => onDeleteStudio(studio.id)}
                         >
                             <Trash2Icon />
                         </button>
                         <button
-                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-slate-500"
+                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-green-400"
                             onClick={() => alert("Editar não implementado")}
                         >
                             <Pencil />
