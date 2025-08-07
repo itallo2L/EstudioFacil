@@ -4,11 +4,16 @@ import './index.css'
 import App from './App.jsx'
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import StudioList from "./pages/StudioList.jsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App />
+  },
+  {
+    path: "/studio",
+    element: <StudioList />
   }
 ]);
 

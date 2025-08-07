@@ -1,9 +1,9 @@
-import StudioList from './pages/StudioList';
+import CardStudio from './components/CardStudio';
 
 function App() {
   return (
     <div>
-      <StudioList />
+      <CardStudio />
     </div>
   );
 };
