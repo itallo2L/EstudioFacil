@@ -3,11 +3,19 @@ import { ModalDetails } from "../components/ModalDetails"
 import ModalAddStudio from "../components/ModalAddStudio"
 import ModalEditStudio from "../components/ModalEditStudio"
 import Status from "../components/Status"
+import { ChevronLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function StudioList() {
     const [studios, setStudios] = useState([
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
+
+    const navigate = useNavigate();
+
+    function onReturnToHome() {
+        navigate("/");
+    };
 
     const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
     const [isModalAdditionOpen, setIsModalAdditionOpen] = useState(false);
@@ -95,6 +103,10 @@ function StudioList() {
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
             <div className="w-full max-w-6xl flex items-center justify-center p-2 bg-slate-200 rounded-t-lg">
+                <button className="flex justify-start bg-slate-400 hover:bg-slate-500 rounded-md mt-2 p-2">
+                    <ChevronLeft className="text-white"
+                        onClick={() => onReturnToHome()} />
+                </button>
                 <h2 className="text-4xl mt-2 font-bold">Agendamento em Estúdio</h2>
             </div>
 
