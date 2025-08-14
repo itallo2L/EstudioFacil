@@ -102,12 +102,12 @@ function StudioList() {
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
-            <div className="w-full max-w-6xl flex items-center justify-center p-2 bg-slate-200 rounded-t-lg">
-                <button className="flex justify-start bg-slate-400 hover:bg-slate-500 rounded-md mt-2 p-2">
+            <div className="w-full max-w-6xl flex items-center p-2 bg-slate-200 rounded-t-lg">
+                <button className="flex justify-start bg-slate-400 hover:bg-slate-500 rounded-md ms-7 mt-2 p-2">
                     <ChevronLeft className="text-white"
                         onClick={() => onReturnToHome()} />
                 </button>
-                <h2 className="text-4xl mt-2 font-bold">Agendamento em Estúdio</h2>
+                <h2 className="absolute left-1/2 -translate-x-1/2 text-4xl mt-2 font-bold">Agendamento em Estúdio</h2>
             </div>
 
             <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-slate-200 rounded-b-lg">
