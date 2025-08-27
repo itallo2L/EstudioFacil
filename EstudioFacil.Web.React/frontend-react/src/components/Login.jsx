@@ -17,7 +17,7 @@ function Login() {
             </div>
             <div className="h-screen w-2/6 bg-white flex items-center justify-center gap-20">
                 <div className="flex-container items-center justify-center">
-                    <div className="flex">
+                    <div className="flex justify-center">
                         <p className="p-2 mb-16 h-8 flex items-center font-mono font-bold text-3xl">Faça o login</p>
                     </div>
                     <div className="flex">
