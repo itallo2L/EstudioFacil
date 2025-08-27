@@ -46,7 +46,7 @@ function Login() {
                             Entrar
                         </button>
                     </div>
-                    <div className="flex bg-slate-900 w-96 h-1 mb-8"></div>
+                    <div className="flex bg-slate-900 w-96 h-[1px] mb-8"></div>
                     <div className="flex justify-center">
                         <a className="hover:underline" href="http://localhost:5173/studio">Não tem uma conta?</a>
                     </div>
