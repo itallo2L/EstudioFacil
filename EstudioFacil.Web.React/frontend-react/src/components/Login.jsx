@@ -34,7 +34,7 @@ function Login() {
                     <div className="flex">
                         <input
                             className="w-full h-8 p-2 rounded-full border border-gray-400"
-                            type="text" />
+                            type="password" />
                     </div>
                     <div className="flex mb-4 mt-4">
                         <a className="hover:underline" href="http://localhost:5173/cards">Esqueceu sua senha?</a>
