@@ -49,7 +49,7 @@ function ModalEditStudio({ isOpen, studio, closeModal, onStudioEdited }) {
                         <button
                             className="bg-slate-400 text-white p-2 rounded-md hover:bg-red-400 mb-4"
                             onClick={() => closeModal()}
-                        >
+                        >   
                             <X />
                         </button>
                     </div>

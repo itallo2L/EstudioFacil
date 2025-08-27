@@ -5,6 +5,7 @@ import App from './App.jsx'
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudioList from "./pages/StudioList.jsx";
+import CardStudio from './components/CardStudio';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: "/studio",
     element: <StudioList />
+  },
+  {
+    path: "/cards",
+    element: <CardStudio />
   }
 ]);
 

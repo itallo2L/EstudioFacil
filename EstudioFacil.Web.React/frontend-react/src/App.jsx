@@ -1,9 +1,9 @@
-import CardStudio from './components/CardStudio';
+import Login from './components/Login';
 
 function App() {
   return (
     <div>
-      <CardStudio />
+      <Login />
     </div>
   );
 };
