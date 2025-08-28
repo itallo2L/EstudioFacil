@@ -21,19 +21,19 @@ function Login() {
                         <p className="p-2 mb-16 h-8 flex items-center font-mono font-bold text-3xl">Faça o login</p>
                     </div>
                     <div className="flex">
-                        <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Endereço de email</p>
+                        <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Endereço de email</p>
                     </div>
                     <div className="flex mb-4">
                         <input
-                            className="w-full h-8 p-2 rounded-full border border-gray-400"
+                            className="w-full p-2 rounded-full border border-gray-400"
                             type="text" />
                     </div>
                     <div className="flex">
-                        <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Senha</p>
+                        <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Senha</p>
                     </div>
                     <div className="flex">
                         <input
-                            className="w-full h-8 p-2 rounded-full border border-gray-400"
+                            className="w-full p-2 rounded-full border border-gray-400"
                             type="password" />
                     </div>
                     <div className="flex mb-4 mt-4">
@@ -48,7 +48,7 @@ function Login() {
                     </div>
                     <div className="flex bg-slate-900 w-96 h-[1px] mb-8"></div>
                     <div className="flex justify-center">
-                        <a className="hover:underline" href="http://localhost:5173/studio">Não tem uma conta?</a>
+                        <a className="hover:underline" href="http://localhost:5173/chooseAccountType">Não tem uma conta?</a>
                     </div>
                 </div>
             </div>

@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
 function CardStudio() {
-
     const navigate = useNavigate();
 
     function onOpenStudioList() {

@@ -6,6 +6,7 @@ import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudioList from "./pages/StudioList.jsx";
 import CardStudio from './components/CardStudio';
+import ChooseAccountType from './components/ChooseAccountType';
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "/cards",
     element: <CardStudio />
+  },
+  {
+    path: "/chooseAccountType",
+    element: <ChooseAccountType />
   }
 ]);
 
