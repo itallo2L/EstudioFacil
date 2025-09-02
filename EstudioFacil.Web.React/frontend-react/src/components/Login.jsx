@@ -37,7 +37,7 @@ function Login() {
                             type="password" />
                     </div>
                     <div className="flex mb-4 mt-4">
-                        <a className="hover:underline" href="http://localhost:5173/cards">Esqueceu sua senha?</a>
+                        <a className="hover:underline" href="http://localhost:5173/resetPassword">Esqueceu sua senha?</a>
                     </div>
                     <div className="flex mb-6">
                         <button

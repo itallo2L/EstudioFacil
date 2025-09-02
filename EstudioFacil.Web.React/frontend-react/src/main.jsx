@@ -7,6 +7,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import StudioList from "./pages/StudioList.jsx";
 import CardStudio from './components/CardStudio';
 import ChooseAccountType from './components/ChooseAccountType';
+import ResetPassword from './components/ResetPassword.jsx';
 
 const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ const router = createBrowserRouter([
   {
     path: "/chooseAccountType",
     element: <ChooseAccountType />
+  },
+  {
+    path: "/resetPassword",
+    element: <ResetPassword />
   }
 ]);
 
