@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
-function CreateStudioAccount() {
+function CreateMusicianAccount() {
+
     const navigate = useNavigate();
 
     function onProceed() {
@@ -11,11 +12,11 @@ function CreateStudioAccount() {
         <div className="w-screen h-screen bg-white flex items-center justify-center gap-20">
             <div className="flex-container items-center justify-center">
                 <div className="flex justify-center">
-                    <p className="p-2 mb-6 h-8 flex items-center font-mono font-bold text-3xl">Criar Conta - Estúdio</p>
+                    <p className="p-2 mb-6 h-8 flex items-center font-mono font-bold text-3xl">Criar Conta - Músico</p>
                 </div>
-                <div className="flex bg-slate-900 w-96 h-[1px] mb-2"></div>
+                <div className="flex bg-slate-900 w-96 h-[1px] mb-6"></div>
                 <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Nome Fantasia</p>
+                    <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Nome</p>
                 </div>
                 <div className="flex mb-2">
                     <input
@@ -23,7 +24,7 @@ function CreateStudioAccount() {
                         type="text" />
                 </div>
                 <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Razão Social</p>
+                    <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Número de Telefone</p>
                 </div>
                 <div className="flex mb-2">
                     <input
@@ -31,7 +32,7 @@ function CreateStudioAccount() {
                         type="text" />
                 </div>
                 <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Endereço</p>
+                    <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">CPF</p>
                 </div>
                 <div className="flex mb-2">
                     <input
@@ -39,7 +40,7 @@ function CreateStudioAccount() {
                         type="text" />
                 </div>
                 <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Número de Telefone</p>
+                    <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Endereço de email</p>
                 </div>
                 <div className="flex mb-2">
                     <input
@@ -47,23 +48,7 @@ function CreateStudioAccount() {
                         type="text" />
                 </div>
                 <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">CNPJ</p>
-                </div>
-                <div className="flex mb-2">
-                    <input
-                        className="w-full p-2 rounded-full border border-gray-400"
-                        type="text" />
-                </div>
-                <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Endereço de email</p>
-                </div>
-                <div className="flex mb-2">
-                    <input
-                        className="w-full p-2 rounded-full border border-gray-400"
-                        type="text" />
-                </div>
-                <div className="flex">
-                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Senha</p>
+                    <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Senha</p>
                 </div>
                 <div className="flex mb-2">
                     <input
@@ -83,4 +68,4 @@ function CreateStudioAccount() {
     );
 };
 
-export default CreateStudioAccount;
+export default CreateMusicianAccount;

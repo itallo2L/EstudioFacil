@@ -13,7 +13,7 @@ function ChooseAccountType() {
             return navigate("/createStudioAccount");
 
         if (selectedType === OPCAO_MUSICO)
-            return navigate("/");
+            return navigate("/createMusicianAccount");
     };
 
     const onSelectAccountType = (event) => {
