@@ -8,6 +8,7 @@ import StudioList from "./pages/StudioList.jsx";
 import CardStudio from './components/CardStudio';
 import ChooseAccountType from './components/ChooseAccountType';
 import ResetPassword from './components/ResetPassword.jsx';
+import CreateStudioAccount from './components/CreateStudioAccount.jsx';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
   {
     path: "/resetPassword",
     element: <ResetPassword />
+  },
+  {
+    path: "/createStudioAccount",
+    element: <CreateStudioAccount />
   }
 ]);
 

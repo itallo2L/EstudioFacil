@@ -10,7 +10,7 @@ function ChooseAccountType() {
 
     function onProceed() {
         if (selectedType === OPCAO_ESTUDIO)
-            return navigate("/studio");
+            return navigate("/createStudioAccount");
 
         if (selectedType === OPCAO_MUSICO)
             return navigate("/");
