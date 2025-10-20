@@ -32,7 +32,7 @@ namespace EstudioFacil.Dominio.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public void Atualizar(EstudioMusical estudioParaAtualizar)
@@ -49,7 +49,7 @@ namespace EstudioFacil.Dominio.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public void Deletar(int id)
@@ -61,7 +61,7 @@ namespace EstudioFacil.Dominio.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public EstudioMusical ObterPorId(int id)
@@ -73,7 +73,7 @@ namespace EstudioFacil.Dominio.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public List<EstudioMusical> ObterTodos(FiltroEstudioMusical? filtro = null)

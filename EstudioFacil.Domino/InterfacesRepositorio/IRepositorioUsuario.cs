@@ -12,5 +12,8 @@ namespace EstudioFacil.Dominio.InterfacesRepositorio
         void AtualizarUsuarioMusico(UsuarioMusico usuarioParaAtualizar);
         void DeletarUsuarioMusico(int id);
         UsuarioMusico ObterUsuarioMusicoPorId(int id);
+        UsuarioBase ObterUsuarioBase(string email, string hashDaSenha);
+        UsuarioEstudio ObterUsuarioEstudioPorIdDoUsuarioBase(int id);
+        UsuarioMusico ObterUsuarioMusicoPorIdDoUsuarioBase(int id);
     }
 }

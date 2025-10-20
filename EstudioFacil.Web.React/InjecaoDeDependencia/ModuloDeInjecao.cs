@@ -34,8 +34,10 @@ namespace EstudioFacil.Web.React.InjecaoDeDependencia
 
             construtor.Services.AddScoped<ServicoEstudioMusical>();
             construtor.Services.AddScoped<ServicoAgendamento>();
+            construtor.Services.AddScoped<ServicoDeUsuarios>();
             construtor.Services.AddScoped<IRepositorioAgendamento, RepositorioAgendamento>();
             construtor.Services.AddScoped<IRepositorioEstudioMusical, RepositorioEstudioMusical>();
+            construtor.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
             construtor.Services.AddScoped<IValidator<EstudioMusical>, ValidadorEstudioMusical>();
             construtor.Services.AddScoped<IValidator<Agendamento>, ValidadorAgendamento>();
 

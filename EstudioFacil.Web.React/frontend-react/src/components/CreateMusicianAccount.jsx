@@ -1,10 +1,44 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreateMusicianAccount() {
 
     const navigate = useNavigate();
+    const [resposta, setResposta] = useState(null);
+    const [userName, setUserName] = useState("");
+    const [userPhone, setUserPhone] = useState("");
+    const [userCpf, setUserCpf] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    const [userPassword, setUserPassword] = useState("");
 
-    function onProceed() {
+    const enviarDados = async () => {
+        const dadosParaAdicionar = {
+            nomeDoResponsavel: userName,
+            numeroDeTelefone: userPhone,
+            cPF: userCpf,
+            enderecoDeEmail: userEmail,
+            hashDaSenha: userPassword
+        };
+
+        if (!dadosParaAdicionar.nomeDoResponsavel)
+            return alert("O campo nome é obrigatório!");
+
+        try {
+            return fetch("https://localhost:7144/api/Usuarios/adicionar-usuario-musico", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dadosParaAdicionar)
+            });
+        } catch (erro) {
+            alert("Erro na requisição: " + erro.message);
+            console.error("Erro na requisição:", erro);
+        };
+    };
+
+    async function onProceed() {
+        await enviarDados();
         navigate("/");
     };
 
@@ -21,6 +55,7 @@ function CreateMusicianAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserName(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -29,6 +64,7 @@ function CreateMusicianAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserPhone(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -37,6 +73,7 @@ function CreateMusicianAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserCpf(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -45,6 +82,7 @@ function CreateMusicianAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserEmail(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -53,6 +91,7 @@ function CreateMusicianAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserPassword(e.target.value)}
                         type="password" />
                 </div>
                 <div className="flex">

@@ -1,11 +1,38 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Login() {
 
     const navigate = useNavigate();
+    const [userEmail, setUserEmail] = useState("");
+    const [userPassword, setUserPassword] = useState("");
+    const [user, setUser] = useState();
 
-    function onOpenStudioList() {
-        navigate("/cards");
+    async function onOpenStudioList() {
+        if (!userEmail)
+            return alert("O campo Endereço de email é obrigatório!");
+        else if (!userPassword)
+            return alert("O campo Senha é obrigatório!");
+
+        const query = `?email=${encodeURIComponent(userEmail)}&hashDaSenha=${encodeURIComponent(userPassword)}`;
+
+        try {
+            const response = await fetch(`https://localhost:7144/api/Usuarios/obter-usuario/${query}`, {
+                method: 'GET'
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text(); // tenta pegar mensagem
+                throw new Error(errorText || `Erro HTTP: ${response.status}`);
+            };
+
+            const data = await response.json();
+            setUser(data);
+            navigate("/cards");
+        } catch (erro) {
+            alert("Erro na requisição: " + erro.message);
+            console.error("Erro na requisição:", erro);
+        };
     };
 
     return (
@@ -26,6 +53,7 @@ function Login() {
                     <div className="flex mb-4">
                         <input
                             className="w-full p-2 rounded-full border border-gray-400"
+                            onChange={e => setUserEmail(e.target.value)}
                             type="text" />
                     </div>
                     <div className="flex">
@@ -34,6 +62,7 @@ function Login() {
                     <div className="flex">
                         <input
                             className="w-full p-2 rounded-full border border-gray-400"
+                            onChange={e => setUserPassword(e.target.value)}
                             type="password" />
                     </div>
                     <div className="flex mb-4 mt-4">
