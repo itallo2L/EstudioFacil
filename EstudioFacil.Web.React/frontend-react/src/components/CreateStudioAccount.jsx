@@ -1,10 +1,60 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function CreateStudioAccount() {
+
     const navigate = useNavigate();
+    const [userTradeName, setUserTradeName] = useState("");
+    const [userCompanyName, setUserCompanyName] = useState("");
+    const [userAddress, setUserAddress] = useState("");
+    const [userPhoneNumber, setUserPhoneNumber] = useState("");
+    const [userCnpj, setUserCnpj] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    const [userPassword, setUserPassword] = useState("");
+
+    const enviarDados = async () => {
+        const dadosParaAdicionar = {
+            nomeFantasia: userTradeName,
+            razaoSocial: userCompanyName,
+            endereco: userAddress,
+            telefone: userPhoneNumber,
+            cNPJ: userCnpj,
+            enderecoDeEmail: userEmail,
+            hashDaSenha: userPassword
+        };
+
+        if (verificarSeHaCamposVazios(dadosParaAdicionar))
+            return alert("Todos os campos são obrigatórios!");
+
+        try {
+            await fetch("https://localhost:7144/api/Usuarios/adicionar-usuario-estudio", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dadosParaAdicionar)
+            });
+            return navigate("/");
+        } catch (erro) {
+            alert("Erro na requisição: " + erro.message);
+            console.error("Erro na requisição:", erro);
+        };
+    };
+
+    function verificarSeHaCamposVazios(dadosParaAdicionar) {
+        let haCampoVazio = false;
+        const arrayComValores = Object.values(dadosParaAdicionar);
+
+        haCampoVazio = arrayComValores.some(propriedade => {
+            if (!propriedade)
+                return true;
+        });
+
+        return haCampoVazio;
+    };
 
     function onProceed() {
-        navigate("/");
+        return enviarDados();
     };
 
     return (
@@ -20,6 +70,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserTradeName(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -28,6 +79,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserCompanyName(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -36,6 +88,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserAddress(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -44,6 +97,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserPhoneNumber(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -52,6 +106,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserCnpj(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -60,6 +115,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserEmail(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">
@@ -68,6 +124,7 @@ function CreateStudioAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
+                        onChange={(e) => setUserPassword(e.target.value)}
                         type="password" />
                 </div>
                 <div className="flex">

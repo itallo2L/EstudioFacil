@@ -4,9 +4,8 @@ import { useNavigate } from "react-router-dom";
 function CreateMusicianAccount() {
 
     const navigate = useNavigate();
-    const [resposta, setResposta] = useState(null);
     const [userName, setUserName] = useState("");
-    const [userPhone, setUserPhone] = useState("");
+    const [userPhoneNumber, setUserPhoneNumber] = useState("");
     const [userCpf, setUserCpf] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
@@ -14,32 +13,44 @@ function CreateMusicianAccount() {
     const enviarDados = async () => {
         const dadosParaAdicionar = {
             nomeDoResponsavel: userName,
-            numeroDeTelefone: userPhone,
+            numeroDeTelefone: userPhoneNumber,
             cPF: userCpf,
             enderecoDeEmail: userEmail,
             hashDaSenha: userPassword
         };
 
-        if (!dadosParaAdicionar.nomeDoResponsavel)
-            return alert("O campo nome é obrigatório!");
+        if (verificarSeHaCamposVazios(dadosParaAdicionar))
+            return alert("Todos os campos são obrigatórios!");
 
         try {
-            return fetch("https://localhost:7144/api/Usuarios/adicionar-usuario-musico", {
+            await fetch("https://localhost:7144/api/Usuarios/adicionar-usuario-musico", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(dadosParaAdicionar)
             });
+            return navigate("/");
         } catch (erro) {
             alert("Erro na requisição: " + erro.message);
             console.error("Erro na requisição:", erro);
         };
     };
 
-    async function onProceed() {
-        await enviarDados();
-        navigate("/");
+    function verificarSeHaCamposVazios(dadosParaAdicionar) {
+        let haCampoVazio = false;
+        const arrayComValores = Object.values(dadosParaAdicionar);
+
+        haCampoVazio = arrayComValores.some(propriedade => {
+            if (!propriedade)
+                return true;
+        });
+
+        return haCampoVazio;
+    };
+
+    function onProceed() {
+        return enviarDados();
     };
 
     return (
@@ -64,7 +75,7 @@ function CreateMusicianAccount() {
                 <div className="flex mb-2">
                     <input
                         className="w-full p-2 rounded-full border border-gray-400"
-                        onChange={(e) => setUserPhone(e.target.value)}
+                        onChange={(e) => setUserPhoneNumber(e.target.value)}
                         type="text" />
                 </div>
                 <div className="flex">

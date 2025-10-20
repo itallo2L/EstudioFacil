@@ -21,13 +21,11 @@ namespace EstudioFacil.Infra.Repositorios
             {
                 EnderecoDeEmail = usuario.EnderecoDeEmail,
                 HashDaSenha = usuario.HashDaSenha,
-                EhUsuarioMusico = true
+                EhUsuarioMusico = false
             };
 
-            _bd.Insert(usuarioBase);
-
-            usuario.IdDoUsuarioBase = usuarioBase.Id;
-
+            var idDoUsuarioBase = _bd.InsertWithIdentity(usuarioBase);
+            usuario.IdDoUsuarioBase = Convert.ToInt32(idDoUsuarioBase);
             _bd.Insert(usuario);
         }
 
@@ -58,10 +56,8 @@ namespace EstudioFacil.Infra.Repositorios
             };
 
             var idDoUsuarioBase = _bd.InsertWithIdentity(usuarioBase);
-
             usuario.IdDoUsuarioBase = Convert.ToInt32(idDoUsuarioBase);
-
-            var teste = _bd.Insert(usuario);
+            _bd.Insert(usuario);
         }
 
         public void AtualizarUsuarioMusico(UsuarioMusico usuarioParaAtualizar)
