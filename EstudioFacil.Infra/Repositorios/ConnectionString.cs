@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EstudioFacil.Infra.Repositorios
+﻿namespace EstudioFacil.Infra.Repositorios
 {
     public sealed class ConnectionString
     {

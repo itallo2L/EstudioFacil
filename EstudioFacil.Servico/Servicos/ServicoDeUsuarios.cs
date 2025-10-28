@@ -14,11 +14,11 @@ namespace EstudioFacil.Servico.Servicos
             _repositorioUsuario = repositorioUsuario;
         }
 
-        public void AdicionarUsuarioEstudio(UsuarioEstudio usuario)
+        public void AdicionarUsuario(Usuario usuario)
         {
             try
             {
-                _repositorioUsuario.AdicionarUsuarioEstudio(usuario);
+                _repositorioUsuario.AdicionarUsuario(usuario);
             }
             catch (ValidationException ve)
             {
@@ -30,11 +30,11 @@ namespace EstudioFacil.Servico.Servicos
             };
         }
 
-        public void AtualizarUsuarioEstudio(UsuarioEstudio usuarioParaAtualizar)
+        public void AtualizarUsuario(Usuario usuarioParaAtualizar)
         {
             try
             {
-                _repositorioUsuario.AtualizarUsuarioEstudio(usuarioParaAtualizar);
+                _repositorioUsuario.AtualizarUsuario(usuarioParaAtualizar);
             }
             catch (ValidationException ve)
             {
@@ -46,11 +46,11 @@ namespace EstudioFacil.Servico.Servicos
             };
         }
 
-        public void DeletarUsuarioEstudio(int id)
+        public void DeletarUsuario(int id)
         {
             try
             {
-                _repositorioUsuario.DeletarUsuarioEstudio(id);
+                _repositorioUsuario.DeletarUsuario(id);
             }
             catch (Exception ex)
             {
@@ -58,11 +58,11 @@ namespace EstudioFacil.Servico.Servicos
             };
         }
 
-        public UsuarioEstudio ObterUsuarioEstudioPorId(int id)
+        public Usuario ObterUsuarioPorId(int id)
         {
             try
             {
-                return _repositorioUsuario.ObterUsuarioEstudioPorId(id);
+                return _repositorioUsuario.ObterUsuarioPorId(id);
             }
             catch (Exception ex)
             {
@@ -70,91 +70,11 @@ namespace EstudioFacil.Servico.Servicos
             };
         }
 
-        public void AdicionarUsuarioMusico(UsuarioMusico usuario)
+        public Usuario ObterUsuario(string email, string hashDaSenha)
         {
             try
             {
-                _repositorioUsuario.AdicionarUsuarioMusico(usuario);
-            }
-            catch (ValidationException ve)
-            {
-                throw new ValidationException(ve.Errors);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            };
-        }
-
-        public void AtualizarUsuarioMusico(UsuarioMusico usuarioParaAtualizar)
-        {
-            try
-            {
-                _repositorioUsuario.AtualizarUsuarioMusico(usuarioParaAtualizar);
-            }
-            catch (ValidationException ve)
-            {
-                throw new ValidationException(ve.Errors);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            };
-        }
-
-        public void DeletarUsuarioMusico(int id)
-        {
-            try
-            {
-                _repositorioUsuario.DeletarUsuarioMusico(id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            };
-        }
-
-        public UsuarioMusico ObterUsuarioMusicoPorId(int id)
-        {
-            try
-            {
-                return _repositorioUsuario.ObterUsuarioMusicoPorId(id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            };
-        }
-
-        public UsuarioBase ObterUsuarioBase(string email, string hashDaSenha)
-        {
-            try
-            {
-                return _repositorioUsuario.ObterUsuarioBase(email, hashDaSenha);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            };
-        }
-
-        public UsuarioEstudio ObterUsuarioEstudioPorIdDoUsuarioBase(int id)
-        {
-            try
-            {
-                return _repositorioUsuario.ObterUsuarioEstudioPorIdDoUsuarioBase(id);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            };
-        }
-
-        public UsuarioMusico ObterUsuarioMusicoPorIdDoUsuarioBase(int id)
-        {
-            try
-            {
-                return _repositorioUsuario.ObterUsuarioMusicoPorIdDoUsuarioBase(id);
+                return _repositorioUsuario.ObterUsuario(email, hashDaSenha);
             }
             catch (Exception ex)
             {

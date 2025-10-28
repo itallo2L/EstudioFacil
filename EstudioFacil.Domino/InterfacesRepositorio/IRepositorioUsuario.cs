@@ -4,16 +4,10 @@ namespace EstudioFacil.Dominio.InterfacesRepositorio
 {
     public interface IRepositorioUsuario
     {
-        void AdicionarUsuarioEstudio(UsuarioEstudio usuario);
-        void AtualizarUsuarioEstudio(UsuarioEstudio usuarioParaAtualizar);
-        void DeletarUsuarioEstudio(int id);
-        UsuarioEstudio ObterUsuarioEstudioPorId(int id);
-        void AdicionarUsuarioMusico(UsuarioMusico usuario);
-        void AtualizarUsuarioMusico(UsuarioMusico usuarioParaAtualizar);
-        void DeletarUsuarioMusico(int id);
-        UsuarioMusico ObterUsuarioMusicoPorId(int id);
-        UsuarioBase ObterUsuarioBase(string email, string hashDaSenha);
-        UsuarioEstudio ObterUsuarioEstudioPorIdDoUsuarioBase(int id);
-        UsuarioMusico ObterUsuarioMusicoPorIdDoUsuarioBase(int id);
+        void AdicionarUsuario(Usuario usuario);
+        void AtualizarUsuario(Usuario usuarioParaAtualizar);
+        void DeletarUsuario(int id);
+        Usuario ObterUsuarioPorId(int id);
+        Usuario ObterUsuario(string email, string hashDaSenha);
     }
 }

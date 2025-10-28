@@ -27,7 +27,7 @@ function CreateStudioAccount() {
             return alert("Todos os campos são obrigatórios!");
 
         try {
-            await fetch("https://localhost:7144/api/Usuarios/adicionar-usuario-estudio", {
+            await fetch("https://localhost:7144/api/Usuarios/adicionar-usuario", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

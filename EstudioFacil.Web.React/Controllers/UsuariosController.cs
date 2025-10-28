@@ -18,70 +18,34 @@ namespace EstudioFacil.Web.React.Controllers
         [HttpGet("obter-usuario")]
         public IActionResult ObterUsuario([FromQuery] string email, [FromQuery] string hashDaSenha)
         {
-            var usuarioBase = _servicoDeUsuarios.ObterUsuarioBase(email, hashDaSenha);
-
-            if (usuarioBase.EhUsuarioMusico)
-            {
-                var usuarioMusico = _servicoDeUsuarios.ObterUsuarioMusicoPorIdDoUsuarioBase(usuarioBase.Id);
-                return Ok(usuarioMusico);
-            }
-            ;
-
-            var usuarioEstudio = _servicoDeUsuarios.ObterUsuarioEstudioPorIdDoUsuarioBase(usuarioBase.Id);
-            return Ok(usuarioEstudio);
-        }
-
-        [HttpGet("obter-usuario-estudio-por-id/{id}")]
-        public IActionResult ObterUsuarioEstudioPorId(int id)
-        {
-            return Ok(_servicoDeUsuarios.ObterUsuarioEstudioPorId(id));
-        }
-
-        [HttpPost("adicionar-usuario-estudio")]
-        public IActionResult AdicionarUsuarioEstudio([FromBody] UsuarioEstudio usuario)
-        {
-            _servicoDeUsuarios.AdicionarUsuarioEstudio(usuario);
+            var usuario = _servicoDeUsuarios.ObterUsuario(email, hashDaSenha);
             return Ok(usuario);
         }
 
-        [HttpPatch("atualizar-usuario-estudio")]
-        public IActionResult AtualizarUsuarioEstudio([FromBody] UsuarioEstudio usuario)
+        [HttpGet("obter-usuario-por-id/{id}")]
+        public IActionResult ObterUsuarioPorId(int id)
         {
-            _servicoDeUsuarios.AtualizarUsuarioEstudio(usuario);
+            return Ok(_servicoDeUsuarios.ObterUsuarioPorId(id));
+        }
+
+        [HttpPost("adicionar-usuario")]
+        public IActionResult AdicionarUsuario([FromBody] Usuario usuario)
+        {
+          _servicoDeUsuarios.AdicionarUsuario(usuario);
+            return Ok(usuario);
+        }
+
+        [HttpPatch("atualizar-usuario")]
+        public IActionResult AtualizarUsuario([FromBody] Usuario usuario)
+        {
+            _servicoDeUsuarios.AtualizarUsuario(usuario);
             return NoContent();
         }
 
-        [HttpDelete("deletar-usuario-estudio/{id}")]
-        public IActionResult DeletarUsuarioEstudio(int id)
+        [HttpDelete("deletar-usuario/{id}")]
+        public IActionResult DeletarUsuario(int id)
         {
-            _servicoDeUsuarios.DeletarUsuarioEstudio(id);
-            return NoContent();
-        }
-
-        [HttpGet("obter-usuario-musico-por-id/{id}")]
-        public IActionResult ObterUsuarioMusicoPorId(int id)
-        {
-            return Ok(_servicoDeUsuarios.ObterUsuarioMusicoPorId(id));
-        }
-
-        [HttpPost("adicionar-usuario-musico")]
-        public IActionResult AdicionarUsuarioMusico([FromBody] UsuarioMusico usuario)
-        {
-            _servicoDeUsuarios.AdicionarUsuarioMusico(usuario);
-            return Ok();
-        }
-
-        [HttpPatch("atualizar-usuario-musico")]
-        public IActionResult AtualizarUsuarioMusico([FromBody] UsuarioMusico usuario)
-        {
-            _servicoDeUsuarios.AtualizarUsuarioMusico(usuario);
-            return NoContent();
-        }
-
-        [HttpDelete("deletar-usuario-musico/{id}")]
-        public IActionResult DeletarUsuarioMusico(int id)
-        {
-            _servicoDeUsuarios.DeletarUsuarioMusico(id);
+            _servicoDeUsuarios.DeletarUsuario(id);
             return NoContent();
         }
     }
