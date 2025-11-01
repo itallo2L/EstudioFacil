@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function Login() {
 
@@ -7,6 +7,10 @@ function Login() {
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
     const [user, setUser] = useState();
+
+    useEffect(() => {
+        localStorage.setItem("user", JSON.stringify(user));
+    }, [user]);
 
     async function onOpenStudioList() {
         if (!userEmail)
@@ -28,7 +32,8 @@ function Login() {
 
             const data = await response.json();
             setUser(data);
-            navigate("/cards");
+            localStorage.setItem("user", JSON.stringify(data));
+            navigate("/studio");
         } catch (erro) {
             alert("Erro na requisição: " + erro.message);
             console.error("Erro na requisição:", erro);

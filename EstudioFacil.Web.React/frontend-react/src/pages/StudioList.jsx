@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { ModalDetails } from "../components/ModalDetails"
 import ModalAddStudio from "../components/ModalAddStudio"
 import ModalEditStudio from "../components/ModalEditStudio"
+import ModalUserSettings from "../components/ModalUserSettings"
 import Status from "../components/Status"
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function StudioList() {
@@ -17,9 +18,14 @@ function StudioList() {
         navigate("/");
     };
 
+    function onUserSettingsClick() {
+        setIsModalSettingsOpen(true);
+    };
+
     const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
     const [isModalAdditionOpen, setIsModalAdditionOpen] = useState(false);
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+    const [isModalSettingsOpen, setIsModalSettingsOpen] = useState(false);
     const [selectedStudio, setSelectedStudio] = useState(null);
 
     function onSeeDetailsClick(studio) {
@@ -102,12 +108,24 @@ function StudioList() {
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
-            <div className="w-full max-w-6xl flex items-center p-2 bg-slate-200 rounded-t-lg">
-                <button className="flex justify-start bg-slate-400 hover:bg-slate-500 rounded-md ms-7 mt-2 p-2">
-                    <ChevronLeft className="text-white"
-                        onClick={() => onReturnToHome()} />
+            <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-slate-200 rounded-t-lg relative">
+                <button
+                    className="bg-slate-400 hover:bg-slate-500 rounded-md p-2 ms-7 mt-2"
+                    onClick={() => onReturnToHome()}
+                >
+                    <ChevronLeft className="text-white" />
                 </button>
-                <h2 className="absolute left-1/2 -translate-x-1/2 text-4xl mt-2 font-bold">Agendamento em Estúdio</h2>
+
+                <h2 className="absolute left-1/2 -translate-x-1/2 text-4xl mt-2 font-bold">
+                    Agendamento em Estúdio
+                </h2>
+
+                <button
+                    className="bg-slate-400 hover:bg-slate-500 rounded-md p-2 me-7 mt-2"
+                    onClick={() => onUserSettingsClick()}
+                >
+                    <Settings className="text-white" />
+                </button>
             </div>
 
             <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-slate-200 rounded-b-lg">
@@ -169,6 +187,10 @@ function StudioList() {
                     closeModal={() => setIsModalEditOpen(false)}
                     onStudioEdited={updatedStudioList}>
                 </ModalEditStudio>
+                <ModalUserSettings
+                    isOpen={isModalSettingsOpen}
+                    closeModal={() => setIsModalSettingsOpen(false)}>
+                </ModalUserSettings>
             </div>
         </div>
     );
