@@ -41,11 +41,13 @@ function Login() {
     };
 
     return (
-        <div className="w-screen h-screen bg-slate-400 flex items-center justify-end gap-20">
+        <div className="w-screen h-screen bg-black flex items-center justify-end gap-20">
             <div className="flex-container items-start w-5/12 mb-32">
-                <p className="p-2 h-8 flex items-center font-mono font-bold text-2xl">Boas-vindas</p>
-                <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-2xl">ao</p>
-                <p className="p-2 h-8 flex items-center font-bold text-6xl">Estúdio Fácil</p>
+                <p className="p-2 h-8 flex items-center font-mono font-bold text-white text-2xl">Boas-vindas</p>
+                <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-white text-2xl">ao</p>
+                <p className="p-2 h-8 flex items-center font-bold text-white text-6xl">
+                    Estúdio Fácil
+                </p>
             </div>
             <div className="h-screen w-2/6 bg-white flex items-center justify-center gap-20">
                 <div className="flex-container items-center justify-center">
@@ -57,7 +59,7 @@ function Login() {
                     </div>
                     <div className="flex mb-4">
                         <input
-                            className="w-full p-2 rounded-full border border-gray-400"
+                            className="w-full p-2 rounded-full border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
                             onChange={e => setUserEmail(e.target.value)}
                             type="text" />
                     </div>
@@ -66,7 +68,7 @@ function Login() {
                     </div>
                     <div className="flex">
                         <input
-                            className="w-full p-2 rounded-full border border-gray-400"
+                            className="w-full p-2 rounded-full border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
                             onChange={e => setUserPassword(e.target.value)}
                             type="password" />
                     </div>
@@ -75,7 +77,7 @@ function Login() {
                     </div>
                     <div className="flex mb-6">
                         <button
-                            className="w-full bg-slate-500 flex justify-center p-3 rounded-full hover:bg-slate-800 text-2xl font-mono font-bold text-white"
+                            className="w-full bg-[#6142FC] flex justify-center p-3 rounded-full hover:bg-[#8642FC] text-2xl font-mono font-bold text-white"
                             onClick={() => onOpenStudioList()}>
                             Entrar
                         </button>
