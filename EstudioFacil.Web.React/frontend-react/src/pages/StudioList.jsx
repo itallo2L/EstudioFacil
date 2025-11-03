@@ -83,10 +83,9 @@ function StudioList() {
                 }
             );
             const data = await response.json();
-
-            data.sort((a, b) => b.id - a.id);
-
-            setStudios(data);
+            const estudiosAbertos = data.filter(x => x.estaAberto == true);
+            estudiosAbertos.sort((a, b) => b.id - a.id);
+            setStudios(estudiosAbertos);
         };
         fetchStudios();
     }, []);
@@ -108,9 +107,9 @@ function StudioList() {
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
-            <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-slate-200 rounded-t-lg relative">
+            <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-slate-200 rounded-t-3xl relative">
                 <button
-                    className="bg-slate-400 hover:bg-slate-500 rounded-md p-2 ms-7 mt-2"
+                    className="bg-slate-400 hover:bg-slate-500 rounded-3xl p-2 ms-7 mt-2"
                     onClick={() => onReturnToHome()}
                 >
                     <ChevronLeft className="text-white" />
@@ -121,46 +120,32 @@ function StudioList() {
                 </h2>
 
                 <button
-                    className="bg-slate-400 hover:bg-slate-500 rounded-md p-2 me-7 mt-2"
+                    className="bg-slate-400 hover:bg-slate-500 rounded-3xl p-2 me-7 mt-2"
                     onClick={() => onUserSettingsClick()}
                 >
                     <Settings className="text-white" />
                 </button>
             </div>
 
-            <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-slate-200 rounded-b-lg">
-                <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-slate-200 rounded-t-xl">
+            <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-slate-200 rounded-b-3xl">
+                <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-slate-200 rounded-t-3xl">
                     <p
                         className="w-full items-start p-2 font-bold text-3xl">Lista de Estúdios ({filteredStudios.length})</p>
                     <div className="flex w-full justify-end space-x-2 p-2 ">
-                        <select
-                            className="p-2 rounded-md font-bold border border-gray-400"
-                            value={filter}
-                            onChange={e => setFilter(e.target.value)}>
-                            <option value="Todos">Todos</option>
-                            <option value="Aberto">Aberto</option>
-                            <option value="Fechado">Fechado</option>
-                        </select>
-
                         <input
-                            className="w-full p-2 rounded-md border border-gray-400"
+                            className="w-full p-2 rounded-3xl border border-gray-400"
                             type="text"
                             placeholder="Nome do estúdio..."
                             value={search}
                             onChange={e => setSearch(e.target.value)} />
 
-                        <button
-                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-slate-500 w-40"
-                            onClick={() => onAddStudioClick()}>
-                            Adicionar
-                        </button>
                     </div>
                 </div>
 
-                <ul className="w-full max-w-6xl bg-slate-200 p-2 rounded-b-xl">
+                <ul className="w-full max-w-6xl bg-slate-200 p-2 rounded-b-3xl">
                     {filteredStudios.map(studio => (
                         <li key={studio.id} className="flex p-1">
-                            <div className="w-full flex flex-col items-start bg-slate-300 p-2 rounded-md hover:bg-slate-500"
+                            <div className="w-full flex flex-col items-start bg-slate-300 p-2 rounded-3xl hover:bg-slate-500"
                                 onClick={() => onSeeDetailsClick(studio)}>
                                 <p className="text-xl font-bold rounded-s-md">{studio.nome}</p>
                                 <Status isOpenStudioOnList={studio.estaAberto}></Status>
