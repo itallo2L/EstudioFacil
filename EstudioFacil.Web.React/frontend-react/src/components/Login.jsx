@@ -73,18 +73,18 @@ function Login() {
                             type="password" />
                     </div>
                     <div className="flex mb-4 mt-4">
-                        <a className="hover:underline" href="http://localhost:5173/resetPassword">Esqueceu sua senha?</a>
+                        <a className="hover:underline hover:text-[#144B6F]" href="http://localhost:5173/resetPassword">Esqueceu sua senha?</a>
                     </div>
                     <div className="flex mb-6">
                         <button
-                            className="w-full bg-[#6142FC] flex justify-center p-3 rounded-full hover:bg-[#8642FC] text-2xl font-mono font-bold text-white"
+                            className="w-full bg-[#6142FC] flex justify-center p-3 rounded-full hover:bg-[#24032E] text-2xl font-mono font-bold text-white"
                             onClick={() => onOpenStudioList()}>
                             Entrar
                         </button>
                     </div>
                     <div className="flex bg-slate-900 w-96 h-[1px] mb-8"></div>
                     <div className="flex justify-center">
-                        <a className="hover:underline" href="http://localhost:5173/chooseAccountType">Não tem uma conta?</a>
+                        <a className="hover:underline hover:text-[#144B6F]" href="http://localhost:5173/chooseAccountType">Não tem uma conta?</a>
                     </div>
                 </div>
             </div>

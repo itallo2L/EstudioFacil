@@ -107,76 +107,79 @@ function StudioList() {
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
-            <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-slate-200 rounded-t-3xl relative">
-                <button
-                    className="bg-slate-400 hover:bg-slate-500 rounded-3xl p-2 ms-7 mt-2"
-                    onClick={() => onReturnToHome()}
-                >
-                    <ChevronLeft className="text-white" />
-                </button>
+            <div className="w-full max-w-6xl bg-[#191919] rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
-                <h2 className="absolute left-1/2 -translate-x-1/2 text-4xl mt-2 font-bold">
-                    Agendamento em Estúdio
-                </h2>
+                <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-[#191919] rounded-t-3xl relative">
+                    <button
+                        className="bg-[#191919] rounded-3xl p-2 ms-7 mt-2 border border-[#191919] hover:border-[#6142FC]"
+                        onClick={() => onReturnToHome()}
+                    >
+                        <ChevronLeft className="text-white hover:text-[#6142FC]" />
+                    </button>
 
-                <button
-                    className="bg-slate-400 hover:bg-slate-500 rounded-3xl p-2 me-7 mt-2"
-                    onClick={() => onUserSettingsClick()}
-                >
-                    <Settings className="text-white" />
-                </button>
-            </div>
+                    <h2 className="absolute left-1/2 -translate-x-1/2 text-white text-4xl mt-2 font-bold">
+                        <p className="w-full items-start p-2 font-bold text-3xl text-white">Lista de Estúdios ({filteredStudios.length})</p>
+                    </h2>
 
-            <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-slate-200 rounded-b-3xl">
-                <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-slate-200 rounded-t-3xl">
-                    <p
-                        className="w-full items-start p-2 font-bold text-3xl">Lista de Estúdios ({filteredStudios.length})</p>
-                    <div className="flex w-full justify-end space-x-2 p-2 ">
-                        <input
-                            className="w-full p-2 rounded-3xl border border-gray-400"
-                            type="text"
-                            placeholder="Nome do estúdio..."
-                            value={search}
-                            onChange={e => setSearch(e.target.value)} />
-
-                    </div>
+                    <button
+                        className="bg-[#191919] rounded-3xl p-2 me-7 mt-2 border border-[#191919] hover:border-[#6142FC]"
+                        onClick={() => onUserSettingsClick()}
+                    >
+                        <Settings className="text-white hover:text-[#6142FC]" />
+                    </button>
                 </div>
 
-                <ul className="w-full max-w-6xl bg-slate-200 p-2 rounded-b-3xl">
-                    {filteredStudios.map(studio => (
-                        <li key={studio.id} className="flex p-1">
-                            <div className="w-full flex flex-col items-start bg-slate-300 p-2 rounded-3xl hover:bg-slate-500"
-                                onClick={() => onSeeDetailsClick(studio)}>
-                                <p className="text-xl font-bold rounded-s-md">{studio.nome}</p>
-                                <Status isOpenStudioOnList={studio.estaAberto}></Status>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-                <ModalDetails isOpen={isModalDetailsOpen}
-                    studio={selectedStudio}
-                    closeModal={() => setIsModalDetailsOpen(false)}
-                    onStudioDelete={deleteStudioFromList}
-                    onReloadStudios={reloadStudios}
-                    onEditStudioClick={onEditStudioClick}>
-                </ModalDetails>
-                <ModalAddStudio
-                    isOpen={isModalAdditionOpen}
-                    closeModal={() => setIsModalAdditionOpen(false)}
-                    onStudioAdded={addStudioToList}
-                    onReloadStudios={reloadStudios}>
-                </ModalAddStudio>
-                <ModalEditStudio
-                    isOpen={isModalEditOpen}
-                    studio={selectedStudio}
-                    closeModal={() => setIsModalEditOpen(false)}
-                    onStudioEdited={updatedStudioList}>
-                </ModalEditStudio>
-                <ModalUserSettings
-                    isOpen={isModalSettingsOpen}
-                    closeModal={() => setIsModalSettingsOpen(false)}>
-                </ModalUserSettings>
+                <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-[#191919] rounded-b-3xl">
+                    <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-[#191919] rounded-t-3xl">
+                        <div className="flex w-full justify-end space-x-2 p-2 ">
+                            <input
+                                className="w-full p-2 rounded-3xl border border-gray-400"
+                                type="text"
+                                placeholder="Nome do estúdio..."
+                                value={search}
+                                onChange={e => setSearch(e.target.value)} />
+
+                        </div>
+                    </div>
+
+                    <ul className="w-full max-w-6xl bg-[#191919] p-2 rounded-b-3xl">
+                        {filteredStudios.map(studio => (
+                            <li key={studio.id} className="flex p-1">
+                                <div className="w-full flex flex-col items-center bg-[#2F2F2F] p-2 rounded-3xl hover:bg-[#24032E] 
+                                            border border-[#6142FC] shadow-[0_0_5px_#6142FC]"
+                                    onClick={() => onSeeDetailsClick(studio)}>
+                                    <p className="text-xl text-white font-bold rounded-s-md">{studio.nome}</p>
+                                    <Status isOpenStudioOnList={studio.estaAberto}></Status>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                    <ModalDetails isOpen={isModalDetailsOpen}
+                        studio={selectedStudio}
+                        closeModal={() => setIsModalDetailsOpen(false)}
+                        onStudioDelete={deleteStudioFromList}
+                        onReloadStudios={reloadStudios}
+                        onEditStudioClick={onEditStudioClick}>
+                    </ModalDetails>
+                    <ModalAddStudio
+                        isOpen={isModalAdditionOpen}
+                        closeModal={() => setIsModalAdditionOpen(false)}
+                        onStudioAdded={addStudioToList}
+                        onReloadStudios={reloadStudios}>
+                    </ModalAddStudio>
+                    <ModalEditStudio
+                        isOpen={isModalEditOpen}
+                        studio={selectedStudio}
+                        closeModal={() => setIsModalEditOpen(false)}
+                        onStudioEdited={updatedStudioList}>
+                    </ModalEditStudio>
+                    <ModalUserSettings
+                        isOpen={isModalSettingsOpen}
+                        closeModal={() => setIsModalSettingsOpen(false)}>
+                    </ModalUserSettings>
+                </div>
             </div>
+
         </div>
     );
 };
