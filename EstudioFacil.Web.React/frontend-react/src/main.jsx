@@ -10,6 +10,7 @@ import ChooseAccountType from './components/ChooseAccountType';
 import ResetPassword from './components/ResetPassword.jsx';
 import CreateStudioAccount from './components/CreateStudioAccount.jsx';
 import CreateMusicianAccount from './components/CreateMusicianAccount.jsx';
+import ScheduleList from './pages/ScheduleList.jsx';
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
   {
     path: "/createMusicianAccount",
     element: <CreateMusicianAccount />
+  },
+  {
+    path: "/schedule",
+    element: <ScheduleList />
   }
 ]);
 

@@ -77,7 +77,7 @@ function Login() {
                     </div>
                     <div className="flex mb-6">
                         <button
-                            className="w-full bg-[#6142FC] flex justify-center p-3 rounded-full hover:bg-[#24032E] text-2xl font-mono font-bold text-white"
+                            className="w-full bg-[#6142FC] flex justify-center p-3 rounded-full hover:bg-[#7357ff] text-2xl font-mono font-bold text-white"
                             onClick={() => onOpenStudioList()}>
                             Entrar
                         </button>

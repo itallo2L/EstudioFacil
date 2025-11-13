@@ -7,9 +7,9 @@ import Status from "../components/Status"
 import { ChevronLeft, Settings } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-function StudioList() {
-    const [studios, setStudios] = useState([
-        JSON.parse(localStorage.getItem("studios")) || []
+function ScheduleList() {
+    const [schedules, setSchedules] = useState([
+        JSON.parse(localStorage.getItem("schedules")) || []
     ]);
 
     const navigate = useNavigate();
@@ -42,40 +42,40 @@ function StudioList() {
     };
 
     const addStudioToList = (newStudio) => {
-        setStudios(prevStudios => [newStudio, ...prevStudios]);
+        setSchedules(prevStudios => [newStudio, ...prevStudios]);
     };
 
     const updatedStudioList = (editedStudio) => {
         const listWithUpdatedStudios = studios.map(studio => studio.id === editedStudio.id ? {
             ...studio, nome: editedStudio.nome, estaAberto: editedStudio.estaAberto
         } : studio);
-        setStudios(listWithUpdatedStudios);
+        setSchedules(listWithUpdatedStudios);
         setIsModalDetailsOpen(false);
     };
 
     const deleteStudioFromList = (deletedStudio) => {
         const newStudioList = studios.filter(studio => studio.id !== deletedStudio.id);
-        setStudios(newStudioList);
+        setSchedules(newStudioList);
     };
 
     const reloadStudios = async () => {
         try {
-            const response = await fetch("https://localhost:7144/api/EstudioMusical", {
+            const response = await fetch("https://localhost:7144/api/Agendamento", {
                 method: "GET",
             });
             const data = await response.json();
-            setStudios(data);
+            setSchedules(data);
         } catch (error) {
             console.error("Erro ao recarregar estúdios:", error);
         };
     };
 
     useEffect(() => {
-        localStorage.setItem("studios", JSON.stringify(studios));
-    }, [studios]);
+        localStorage.setItem("schedules", JSON.stringify(schedules));
+    }, [schedules]);
 
     useEffect(() => {
-        const fetchStudios = async () => {
+        const fetchSchedules = async () => {
             const response = await fetch(
                 "https://localhost:7144/api/EstudioMusical",
                 {
@@ -83,11 +83,11 @@ function StudioList() {
                 }
             );
             const data = await response.json();
-            const estudiosAbertos = data.filter(x => x.estaAberto == true);
-            estudiosAbertos.sort((a, b) => b.id - a.id);
-            setStudios(estudiosAbertos);
+            debugger
+            data.sort((a, b) => b.id - a.id);
+            setSchedules(data);
         };
-        fetchStudios();
+        fetchSchedules();
     }, []);
 
     const [filter, setFilter] = useState("Todos");
@@ -107,33 +107,33 @@ function StudioList() {
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6">
 
-            <div className="w-full max-w-6xl bg-white rounded-3xl relative shadow-[0_0_25px#6142FC]">
+            <div className="w-full max-w-6xl bg-[#191919] rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
-                <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-white rounded-t-3xl relative">
+                <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-[#191919] rounded-t-3xl relative">
                     <button
-                        className="bg-[#6142FC] rounded-3xl p-2 ms-7 mt-2 border hover:bg-[#7357ff]"
+                        className="bg-[#191919] rounded-3xl p-2 ms-7 mt-2 border border-[#191919] hover:border-[#6142FC]"
                         onClick={() => onReturnToHome()}
                     >
-                        <ChevronLeft className="text-white" />
+                        <ChevronLeft className="text-white hover:text-[#6142FC]" />
                     </button>
 
                     <h2 className="absolute left-1/2 -translate-x-1/2 text-white text-4xl mt-2 font-bold">
-                        <p className="w-full items-start p-2 font-bold text-3xl text-black">Lista de Estúdios ({filteredStudios.length})</p>
+                        <p className="w-full items-start p-2 font-bold text-3xl text-white">Lista de Estúdios ({filteredStudios.length})</p>
                     </h2>
 
                     <button
-                        className="bg-[#6142FC] rounded-3xl p-2 me-7 mt-2 border hover:bg-[#7357ff]"
+                        className="bg-[#191919] rounded-3xl p-2 me-7 mt-2 border border-[#191919] hover:border-[#6142FC]"
                         onClick={() => onUserSettingsClick()}
                     >
-                        <Settings className="text-white" />
+                        <Settings className="text-white hover:text-[#6142FC]" />
                     </button>
                 </div>
 
-                <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-white rounded-b-3xl">
-                    <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-white rounded-t-3xl">
+                <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-[#191919] rounded-b-3xl">
+                    <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-[#191919] rounded-t-3xl">
                         <div className="flex w-full justify-end space-x-2 p-2 ">
                             <input
-                                className="w-full p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                className="w-full p-2 rounded-3xl border border-gray-400"
                                 type="text"
                                 placeholder="Nome do estúdio..."
                                 value={search}
@@ -142,13 +142,13 @@ function StudioList() {
                         </div>
                     </div>
 
-                    <ul className="w-full max-w-6xl bg-white p-2 rounded-b-3xl">
+                    <ul className="w-full max-w-6xl bg-[#191919] p-2 rounded-b-3xl">
                         {filteredStudios.map(studio => (
                             <li key={studio.id} className="flex p-1">
-                                <div className="w-full flex  flex-col items-center bg-white p-2 rounded-3xl hover:bg-[#8c77f7] 
+                                <div className="w-full flex flex-col items-center bg-[#2F2F2F] p-2 rounded-3xl hover:bg-[#24032E] 
                                             border border-[#6142FC] shadow-[0_0_5px_#6142FC]"
                                     onClick={() => onSeeDetailsClick(studio)}>
-                                    <p className="text-xl text-black font-bold rounded-s-md">{studio.nome}</p>
+                                    <p className="text-xl text-white font-bold rounded-s-md">{studio.nome}</p>
                                     <Status isOpenStudioOnList={studio.estaAberto}></Status>
                                 </div>
                             </li>
@@ -184,4 +184,4 @@ function StudioList() {
     );
 };
 
-export default StudioList;
+export default ScheduleList;
