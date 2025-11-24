@@ -41,10 +41,12 @@ function Login() {
     };
 
     return (
-        <div className="w-screen h-screen bg-black flex items-center justify-end gap-20">
+        <div className="w-screen h-screen flex items-center justify-end gap-20 
+             bg-cover bg-center bg-no-repeat font-serif"
+            style={{ backgroundImage: "url('/src/assets/purple-vinyl-5.jpg')" }}>
             <div className="flex-container items-start w-5/12 mb-32">
-                <p className="p-2 h-8 flex items-center font-mono font-bold text-white text-2xl">Boas-vindas</p>
-                <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-white text-2xl">ao</p>
+                <p className="p-2 h-8 flex items-center font-bold text-white text-2xl">Boas-vindas</p>
+                <p className="p-2 mb-2 h-8 flex items-center font-bold text-white text-2xl">ao</p>
                 <p className="p-2 h-8 flex items-center font-bold text-white text-6xl">
                     Estúdio Fácil
                 </p>

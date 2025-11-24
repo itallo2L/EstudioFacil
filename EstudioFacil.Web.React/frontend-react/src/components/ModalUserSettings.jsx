@@ -38,15 +38,15 @@ function ModalUserSettings({ isOpen, closeModal }) {
             alert("Erro na requisição: " + erro.message);
             console.error("Erro na requisição:", erro);
         }
-    }
+    };
 
     function onLogOutClick() {
         localStorage.removeItem("user");
         navigate("/");
-    }
+    };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 font-serif">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-2xl w-[380px] p-6 relative flex flex-col items-center">
                 {/* Botão X */}
                 <button
@@ -65,13 +65,13 @@ function ModalUserSettings({ isOpen, closeModal }) {
                 </button>
 
                 {/* Título */}
-                <h2 className="text-2xl font-bold mb-4 border-b border-black w-full text-center pb-2">
+                <h2 className="text-2xl font-bold font-serif mb-4 border-b border-black w-full text-center pb-2">
                     Configurações
                 </h2>
 
                 {/* Campos */}
                 <div className="flex flex-col w-full space-y-3">
-                    <label className="text-sm font-semibold">Nome</label>
+                    <label className="text-sm font-bold">Nome</label>
                     <input
                         disabled="true"
                         className="border border-black rounded-full px-3 py-1.5 focus:outline-none disabled:opacity-70"
@@ -79,18 +79,18 @@ function ModalUserSettings({ isOpen, closeModal }) {
                         onChange={(e) => setUserName(e.target.value)}
                     />
 
-                    <label className="text-sm font-semibold">CPF</label>
+                    <label className="text-sm font-bold">CPF</label>
                     <input
                         disabled="true"
-                        className="border border-black rounded-full px-3 py-1.5 focus:outline-none disabled:opacity-70"
+                        className="border border-black rounded-full px-3 py-1.5 focus:outline-none disabled:opacity-70 font-mono"
                         value={userCpf}
                         onChange={(e) => setUserCpf(e.target.value)}
                     />
 
-                    <label className="text-sm font-semibold">Número de Telefone</label>
-                    <input
+                    <label className="text-sm font-bold">Número de Telefone</label>
+                    <input  
                         disabled={!isEdition}
-                        className="border border-black rounded-full px-3 py-1.5 focus:outline-none disabled:opacity-70"
+                        className="border border-black rounded-full px-3 py-1.5 focus:outline-none disabled:opacity-70 font-mono"
                         value={userPhone}
                         onChange={(e) => setUserPhone(e.target.value)}
                     />
