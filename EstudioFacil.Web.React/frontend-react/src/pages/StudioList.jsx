@@ -4,19 +4,13 @@ import ModalAddStudio from "../components/ModalAddStudio"
 import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
 import Status from "../components/Status"
-import { ChevronLeft, Settings } from "lucide-react";
+import { ChevronLeft, Settings, ArrowDownUp, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function StudioList() {
     const [studios, setStudios] = useState([
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
-
-    const navigate = useNavigate();
-
-    function onReturnToHome() {
-        navigate("/");
-    };
 
     function onUserSettingsClick() {
         setIsModalSettingsOpen(true);
@@ -92,64 +86,188 @@ function StudioList() {
 
     const [filter, setFilter] = useState("Todos");
     const [search, setSearch] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [sortBy, setSortBy] = useState("");
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const filteredStudios = studios.filter(studio => {
-        const statusMatch =
-            filter === "Todos" ||
-            (filter === "Aberto" && studio.estaAberto) ||
-            (filter === "Fechado" && !studio.estaAberto);
+    const filteredStudios = studios
+        .filter(studio => {
+            const statusMatch =
+                filter === "Todos" ||
+                (filter === "Aberto" && studio.estaAberto) ||
+                (filter === "Fechado" && !studio.estaAberto);
 
-        const searchMatch = studio.nome?.toLowerCase().includes(search.toLowerCase());
+            const searchMatch = studio.nome?.toLowerCase().includes(search.toLowerCase());
 
-        return statusMatch && searchMatch;
-    });
+            // Filtro por range de data
+            let dateMatch = true;
+            if (startDate || endDate) {
+                // Assumindo que o studio tenha uma propriedade 'dataCriacao', 'dataAgendamento', etc.
+                const studioDate = studio.dataCriacao || studio.dataAgendamento || studio.data;
+
+                if (studioDate) {
+                    const studioDateObj = new Date(studioDate);
+                    const startDateObj = startDate ? new Date(startDate) : null;
+                    const endDateObj = endDate ? new Date(endDate) : null;
+
+                    if (startDateObj && endDateObj) {
+                        dateMatch = studioDateObj >= startDateObj && studioDateObj <= endDateObj;
+                    } else if (startDateObj) {
+                        dateMatch = studioDateObj >= startDateObj;
+                    } else if (endDateObj) {
+                        dateMatch = studioDateObj <= endDateObj;
+                    }
+                } else {
+                    // Se não houver data no studio, não mostra no filtro
+                    dateMatch = false;
+                }
+            }
+
+            return statusMatch && searchMatch && dateMatch;
+        })
+        .sort((a, b) => {
+            // Ordenação por preço
+            if (sortBy === "menorPreco") {
+                return (a.preco || 0) - (b.preco || 0);
+            } else if (sortBy === "maiorPreco") {
+                return (b.preco || 0) - (a.preco || 0);
+            }
+            return 0;
+        });
+
+    const handleSortSelect = (sortOption) => {
+        setSortBy(sortOption);
+        setIsMenuOpen(false);
+    };
+
+    const clearDateFilter = () => {
+        setStartDate("");
+        setEndDate("");
+    };
 
     return (
-        <div className="w-screen h-screen flex flex-col items-center p-6">
+        <div className="w-screen h-screen flex flex-col items-center p-6 font-serif">
 
             <div className="w-full max-w-6xl bg-white rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
-                <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-white rounded-t-3xl relative">
-                    <button
-                        className="bg-[#6142FC] rounded-3xl p-2 ms-7 mt-2 border hover:bg-[#7357ff]"
-                        onClick={() => onReturnToHome()}
-                    >
-                        <ChevronLeft className="text-white" />
-                    </button>
+                <div className="w-full max-w-6xl grid grid-cols-3 items-center p-2 bg-white rounded-t-3xl">
+                    {/* Espaço vazio */}
+                    <div></div>
 
-                    <h2 className="absolute left-1/2 -translate-x-1/2 text-white text-4xl mt-2 font-bold">
-                        <p className="w-full items-start p-2 font-bold text-3xl text-black">Lista de Estúdios ({filteredStudios.length})</p>
+                    {/* Título centralizado */}
+                    <h2 className="text-center text-black text-3xl p-2">
+                        Lista de Estúdios ({filteredStudios.length})
                     </h2>
 
-                    <button
-                        className="bg-[#6142FC] rounded-3xl p-2 me-7 mt-2 border hover:bg-[#7357ff]"
-                        onClick={() => onUserSettingsClick()}
-                    >
-                        <Settings className="text-white" />
-                    </button>
+                    {/* Botão alinhado à direita */}
+                    <div className="flex justify-end">
+                        <button
+                            className="bg-[#6142FC] rounded-3xl p-2 me-7 mt-2 border hover:bg-[#7357ff]"
+                            onClick={() => onUserSettingsClick()}
+                        >
+                            <Settings className="text-white" />
+                        </button>
+                    </div>
                 </div>
 
                 <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-white rounded-b-3xl">
                     <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-white rounded-t-3xl">
-                        <div className="flex w-full justify-end space-x-2 p-2 ">
+                        <div className="flex w-full justify-end space-x-2 p-2">
+                            {/* Input de pesquisa */}
                             <input
                                 className="w-full p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
                                 type="text"
                                 placeholder="Nome do estúdio..."
                                 value={search}
-                                onChange={e => setSearch(e.target.value)} />
+                                onChange={e => setSearch(e.target.value)}
+                            />
 
+                            <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm text-black">De:</label>
+                                    <input
+                                        className="p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                        type="date"
+                                        value={startDate}
+                                        onChange={e => setStartDate(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm text-black">Até:</label>
+                                    <input
+                                        className="p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                        type="date"
+                                        value={endDate}
+                                        onChange={e => setEndDate(e.target.value)}
+                                        min={startDate} // Impede selecionar data final anterior à inicial
+                                    />
+                                </div>
+
+                                {(startDate || endDate) && (
+                                    <button
+                                        className="p-2 text-sm text-red-500 hover:text-red-700 font-semibold"
+                                        onClick={clearDateFilter}
+                                    >
+                                        Limpar
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Filtro de range de data */}
+                    <div className="w-full max-w-6xl flex items-end justify-end p-2">
+                        {/* MenuButton de ordenação */}
+                        <div className="relative">
+                            <button
+                                className="flex items-end justify-end gap-2 bg-[#6142FC] text-white px-4 py-2 rounded-3xl border border-[#6142FC] hover:bg-[#7357ff] transition-colors"
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            >
+                                <ArrowDownUp size={18} />
+                                <span>Ordenar</span>
+                            </button>
+
+                            {isMenuOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-[#6142FC] z-10">
+                                    <button
+                                        className="w-full text-left px-4 py-2 hover:bg-[#6142FC] hover:text-white rounded-t-lg transition-colors"
+                                        onClick={() => handleSortSelect("menorPreco")}
+                                    >
+                                        Menor valor
+                                    </button>
+                                    <button
+                                        className="w-full text-left px-4 py-2 hover:bg-[#6142FC] hover:text-white rounded-b-lg transition-colors"
+                                        onClick={() => handleSortSelect("maiorPreco")}
+                                    >
+                                        Maior valor
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
 
                     <ul className="w-full max-w-6xl bg-white p-2 rounded-b-3xl">
                         {filteredStudios.map(studio => (
                             <li key={studio.id} className="flex p-1">
-                                <div className="w-full flex  flex-col items-center bg-white p-2 rounded-3xl hover:bg-[#8c77f7] 
+                                <div className="w-full flex flex-col items-center bg-white p-2 rounded-3xl hover:bg-[#8c77f7] 
                                             border border-[#6142FC] shadow-[0_0_5px_#6142FC]"
                                     onClick={() => onSeeDetailsClick(studio)}>
                                     <p className="text-xl text-black font-bold rounded-s-md">{studio.nome}</p>
                                     <Status isOpenStudioOnList={studio.estaAberto}></Status>
+                                    {/* Exibir preço se existir */}
+                                    {studio.preco && (
+                                        <p className="text-black mt-1 font-semibold">
+                                            R$ {studio.preco.toFixed(2)}
+                                        </p>
+                                    )}
+                                    {/* Exibir data se existir */}
+                                    {(studio.dataCriacao || studio.dataAgendamento || studio.data) && (
+                                        <p className="text-sm text-gray-600 mt-1">
+                                            {new Date(studio.dataCriacao || studio.dataAgendamento || studio.data).toLocaleDateString('pt-BR')}
+                                        </p>
+                                    )}
                                 </div>
                             </li>
                         ))}
