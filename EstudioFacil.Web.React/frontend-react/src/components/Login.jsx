@@ -43,14 +43,15 @@ function Login() {
     return (
         <div className="w-screen h-screen flex items-center justify-end gap-20 
              bg-cover bg-center bg-no-repeat font-serif"
-            style={{ backgroundImage: "url('/assets/original-vinyl.jpg')" }}>
-            <div className="flex-container items-start w-5/12 mb-32">
+            style={{ backgroundImage: `url('https://i.pinimg.com/736x/0f/2e/16/0f2e16f0b0639640b32c76c416c543b0.jpg')` }}>
+            <div className="flex flex-col items-start w-5/12 mb-32 mr-20">
                 <p className="p-2 h-8 flex items-center font-bold text-white text-2xl">Boas-vindas</p>
                 <p className="p-2 mb-2 h-8 flex items-center font-bold text-white text-2xl">ao</p>
                 <p className="p-2 h-8 flex items-center font-bold text-white text-6xl">
                     Estúdio Fácil
                 </p>
             </div>
+
             <div className="h-screen w-2/6 bg-white flex items-center justify-center gap-20">
                 <div className="flex-container items-center justify-center">
                     <div className="flex justify-center">

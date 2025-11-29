@@ -217,7 +217,6 @@ function StudioList() {
                         </div>
                     </div>
 
-                    {/* Filtro de range de data */}
                     <div className="w-full max-w-6xl flex items-end justify-end p-2">
                         {/* MenuButton de ordenação */}
                         <div className="relative">

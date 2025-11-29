@@ -4,19 +4,13 @@ import ModalAddStudio from "../components/ModalAddStudio"
 import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
 import Status from "../components/Status"
-import { ChevronLeft, Settings } from "lucide-react";
+import { ChevronLeft, Settings, ArrowDownUp, Calendar } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 function ScheduleList() {
-    const [schedules, setSchedules] = useState([
-        JSON.parse(localStorage.getItem("schedules")) || []
+    const [studios, setStudios] = useState([
+        JSON.parse(localStorage.getItem("studios")) || []
     ]);
-
-    const navigate = useNavigate();
-
-    function onReturnToHome() {
-        navigate("/");
-    };
 
     function onUserSettingsClick() {
         setIsModalSettingsOpen(true);
@@ -42,20 +36,20 @@ function ScheduleList() {
     };
 
     const addStudioToList = (newStudio) => {
-        setSchedules(prevStudios => [newStudio, ...prevStudios]);
+        setStudios(prevStudios => [newStudio, ...prevStudios]);
     };
 
     const updatedStudioList = (editedStudio) => {
         const listWithUpdatedStudios = studios.map(studio => studio.id === editedStudio.id ? {
-            ...studio, nome: editedStudio.nome, estaAberto: editedStudio.estaAberto
+            ...studio, nomeResponsavel: editedStudio.nomeResponsavel
         } : studio);
-        setSchedules(listWithUpdatedStudios);
+        setStudios(listWithUpdatedStudios);
         setIsModalDetailsOpen(false);
     };
 
     const deleteStudioFromList = (deletedStudio) => {
         const newStudioList = studios.filter(studio => studio.id !== deletedStudio.id);
-        setSchedules(newStudioList);
+        setStudios(newStudioList);
     };
 
     const reloadStudios = async () => {
@@ -64,96 +58,252 @@ function ScheduleList() {
                 method: "GET",
             });
             const data = await response.json();
-            setSchedules(data);
+            setStudios(data);
         } catch (error) {
             console.error("Erro ao recarregar estúdios:", error);
         };
     };
 
     useEffect(() => {
-        localStorage.setItem("schedules", JSON.stringify(schedules));
-    }, [schedules]);
+        localStorage.setItem("studios", JSON.stringify(studios));
+    }, [studios]);
 
     useEffect(() => {
-        const fetchSchedules = async () => {
+        const fetchStudios = async () => {
             const response = await fetch(
-                "https://localhost:7144/api/EstudioMusical",
+                "https://localhost:7144/api/Agendamento",
                 {
                     method: "GET",
                 }
             );
             const data = await response.json();
-            debugger
             data.sort((a, b) => b.id - a.id);
-            setSchedules(data);
+            setStudios(data);
         };
-        fetchSchedules();
+        fetchStudios();
     }, []);
 
     const [filter, setFilter] = useState("Todos");
     const [search, setSearch] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [sortBy, setSortBy] = useState("");
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const filteredStudios = studios.filter(studio => {
-        const statusMatch =
-            filter === "Todos" ||
-            (filter === "Aberto" && studio.estaAberto) ||
-            (filter === "Fechado" && !studio.estaAberto);
+    const filteredStudios = studios
+        .filter(studio => {
+            // Filtro por nomeResponsavel E valorTotal
+            const searchMatch = search === "" ||
+                studio.nomeResponsavel?.toLowerCase().includes(search.toLowerCase()) ||
+                studio.valorTotal?.toString().includes(search);
 
-        const searchMatch = studio.nome?.toLowerCase().includes(search.toLowerCase());
+            // Filtro por range de data (dataEHoraDeEntrada)
+            let dateMatch = true;
+            if (startDate || endDate) {
+                const studioDate = studio.dataEHoraDeEntrada;
 
-        return statusMatch && searchMatch;
-    });
+                if (studioDate) {
+                    const studioDateObj = new Date(studioDate);
+                    // Ajusta para considerar apenas a data (ignora hora)
+                    studioDateObj.setHours(0, 0, 0, 0);
+
+                    const startDateObj = startDate ? new Date(startDate) : null;
+                    const endDateObj = endDate ? new Date(endDate) : null;
+
+                    if (startDateObj && endDateObj) {
+                        dateMatch = studioDateObj >= startDateObj && studioDateObj <= endDateObj;
+                    } else if (startDateObj) {
+                        dateMatch = studioDateObj >= startDateObj;
+                    } else if (endDateObj) {
+                        dateMatch = studioDateObj <= endDateObj;
+                    }
+                } else {
+                    dateMatch = false;
+                }
+            }
+
+            return searchMatch && dateMatch;
+        })
+        .sort((a, b) => {
+            // Ordenação por preço
+            if (sortBy === "menorPreco") {
+                return (a.valorTotal || 0) - (b.valorTotal || 0);
+            } else if (sortBy === "maiorPreco") {
+                return (b.valorTotal || 0) - (a.valorTotal || 0);
+            }
+            // Ordenação padrão por data de entrada (mais recente primeiro)
+            return new Date(b.dataEHoraDeEntrada) - new Date(a.dataEHoraDeEntrada);
+        });
+
+    const handleSortSelect = (sortOption) => {
+        setSortBy(sortOption);
+        setIsMenuOpen(false);
+    };
+
+    const clearDateFilter = () => {
+        setStartDate("");
+        setEndDate("");
+    };
+
+    const clearAllFilters = () => {
+        setSearch("");
+        setStartDate("");
+        setEndDate("");
+        setSortBy("");
+    };
+
+    // Função para formatar números com zero à esquerda
+    const formatNumber = (num) => {
+        return num.toString().padStart(2, '0');
+    };
 
     return (
-        <div className="w-screen h-screen flex flex-col items-center p-6">
+        <div className="w-screen h-screen flex flex-col items-center p-6 ">
 
-            <div className="w-full max-w-6xl bg-[#191919] rounded-3xl relative shadow-[0_0_25px#6142FC]">
+            <div className="w-full max-w-6xl bg-white rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
-                <div className="w-full max-w-6xl flex justify-between items-center p-2 bg-[#191919] rounded-t-3xl relative">
-                    <button
-                        className="bg-[#191919] rounded-3xl p-2 ms-7 mt-2 border border-[#191919] hover:border-[#6142FC]"
-                        onClick={() => onReturnToHome()}
-                    >
-                        <ChevronLeft className="text-white hover:text-[#6142FC]" />
-                    </button>
+                <div className="w-full max-w-6xl grid grid-cols-3 items-center p-2 bg-white rounded-t-3xl">
+                    {/* Espaço vazio */}
+                    <div></div>
 
-                    <h2 className="absolute left-1/2 -translate-x-1/2 text-white text-4xl mt-2 font-bold">
-                        <p className="w-full items-start p-2 font-bold text-3xl text-white">Lista de Estúdios ({filteredStudios.length})</p>
+                    {/* Título centralizado */}
+                    <h2 className="text-center text-black text-3xl p-2 font-serif">
+                        Lista de Agendamentos
                     </h2>
 
-                    <button
-                        className="bg-[#191919] rounded-3xl p-2 me-7 mt-2 border border-[#191919] hover:border-[#6142FC]"
-                        onClick={() => onUserSettingsClick()}
-                    >
-                        <Settings className="text-white hover:text-[#6142FC]" />
-                    </button>
+                    {/* Botão alinhado à direita */}
+                    <div className="flex justify-end">
+                        <button
+                            className="bg-[#6142FC] rounded-3xl p-2 me-7 mt-2 border hover:bg-[#7357ff]"
+                            onClick={() => onUserSettingsClick()}
+                        >
+                            <Settings className="text-white" />
+                        </button>
+                    </div>
                 </div>
 
-                <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-[#191919] rounded-b-3xl">
-                    <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-[#191919] rounded-t-3xl">
-                        <div className="flex w-full justify-end space-x-2 p-2 ">
+                <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-white rounded-b-3xl">
+                    <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-white rounded-t-3xl">
+                        <div className="flex w-full justify-end space-x-2 p-2">
+                            {/* Input de pesquisa */}
                             <input
-                                className="w-full p-2 rounded-3xl border border-gray-400"
+                                className="w-full p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC] font-serif"
                                 type="text"
-                                placeholder="Nome do estúdio..."
+                                placeholder="Nome do responsável ou valor total..."
                                 value={search}
-                                onChange={e => setSearch(e.target.value)} />
+                                onChange={e => setSearch(e.target.value)}
+                            />
 
+                            <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm text-black font-serif">De:</label>
+                                    <input
+                                        className="p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                        type="date"
+                                        value={startDate}
+                                        onChange={e => setStartDate(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <label className="text-sm text-black font-serif">Até:</label>
+                                    <input
+                                        className="p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                        type="date"
+                                        value={endDate}
+                                        onChange={e => setEndDate(e.target.value)}
+                                        min={startDate}
+                                    />
+                                </div>
+
+                                {(search || startDate || endDate || sortBy) && (
+                                    <button
+                                        className="p-2 text-sm text-red-500 hover:text-red-700 font-semibold font-serif"
+                                        onClick={clearAllFilters}
+                                    >
+                                        Limpar Filtros
+                                    </button>
+                                )}
+                            </div>
                         </div>
                     </div>
 
-                    <ul className="w-full max-w-6xl bg-[#191919] p-2 rounded-b-3xl">
-                        {filteredStudios.map(studio => (
-                            <li key={studio.id} className="flex p-1">
-                                <div className="w-full flex flex-col items-center bg-[#2F2F2F] p-2 rounded-3xl hover:bg-[#24032E] 
-                                            border border-[#6142FC] shadow-[0_0_5px_#6142FC]"
-                                    onClick={() => onSeeDetailsClick(studio)}>
-                                    <p className="text-xl text-white font-bold rounded-s-md">{studio.nome}</p>
-                                    <Status isOpenStudioOnList={studio.estaAberto}></Status>
+                    {/* Menu de ordenação */}
+                    <div className="w-full max-w-6xl flex justify-end p-2">
+                        <div className="relative">
+                            <button
+                                className="flex items-center gap-2 bg-[#6142FC] text-white px-4 py-2 rounded-3xl hover:bg-[#7357ff] font-serif"
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                            >
+                                <ArrowDownUp size={16} />
+                                Ordenar
+                            </button>
+                            {isMenuOpen && (
+                                <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                    <button
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-serif"
+                                        onClick={() => handleSortSelect("menorPreco")}
+                                    >
+                                        Menor Preço
+                                    </button>
+                                    <button
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-serif"
+                                        onClick={() => handleSortSelect("maiorPreco")}
+                                    >
+                                        Maior Preço
+                                    </button>
+                                    <button
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-serif"
+                                        onClick={() => handleSortSelect("")}
+                                    >
+                                        Limpar Ordenação
+                                    </button>
                                 </div>
-                            </li>
-                        ))}
-                    </ul>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="w-full max-w-6xl bg-white rounded-3xl overflow-hidden shadow-[0_0_25px#4D4D4D]">
+                        <table className="w-full border-collapse">
+                            <thead>
+                                <tr className="bg-[#6142FC] text-white font-serif">
+                                    <th className="p-3 text-center">Responsável</th>
+                                    <th className="p-3 text-center">Data de Entrada</th>
+                                    <th className="p-3 text-center">Valor Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredStudios.map((studio, index) => (
+                                    <tr
+                                        key={studio.id}
+                                        className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+                                            } border-b border-gray-200 hover:bg-[#8c77f7] hover:text-white cursor-pointer transition-colors`}
+                                        onClick={() => onSeeDetailsClick(studio)}
+                                    >
+                                        <td className="p-3 font-serif font-semibold text-center">{studio.nomeResponsavel}</td>
+                                        <td className="p-3 text-center font-medium">
+                                            {new Date(studio.dataEHoraDeEntrada).toLocaleDateString('pt-BR')}
+                                        </td>
+                                        <td className="p-3 font-medium text-center text-green-700">R$ {studio.valorTotal},00</td>
+                                    </tr>
+                                ))}
+
+                                {/* Linha do rodapé simulada */}
+                                <tr>
+                                    <td colSpan="3" className="p-0">
+                                        <div className="bg-[#6142FC] border-gray-300 rounded-b-3xl p-3">
+                                            <div className="flex justify-center items-center gap-2 font-serif font-semibold">
+                                                <span className="text-white">
+                                                    Total: {formatNumber(filteredStudios.length)} / {formatNumber(studios.length)}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                     <ModalDetails isOpen={isModalDetailsOpen}
                         studio={selectedStudio}
                         closeModal={() => setIsModalDetailsOpen(false)}
