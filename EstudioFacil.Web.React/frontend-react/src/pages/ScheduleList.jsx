@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ModalDetails } from "../components/ModalDetails"
+import { ModalScheduleDetails } from "../components/ModalScheduleDetails"
 import ModalAddStudio from "../components/ModalAddStudio"
 import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
@@ -47,11 +47,6 @@ function ScheduleList() {
         setIsModalDetailsOpen(false);
     };
 
-    const deleteStudioFromList = (deletedStudio) => {
-        const newStudioList = studios.filter(studio => studio.id !== deletedStudio.id);
-        setStudios(newStudioList);
-    };
-
     const reloadStudios = async () => {
         try {
             const response = await fetch("https://localhost:7144/api/Agendamento", {
@@ -97,7 +92,6 @@ function ScheduleList() {
                 studio.nomeResponsavel?.toLowerCase().includes(search.toLowerCase()) ||
                 studio.valorTotal?.toString().includes(search);
 
-            // Filtro por range de data (dataEHoraDeEntrada)
             let dateMatch = true;
             if (startDate || endDate) {
                 const studioDate = studio.dataEHoraDeEntrada;
@@ -125,13 +119,11 @@ function ScheduleList() {
             return searchMatch && dateMatch;
         })
         .sort((a, b) => {
-            // Ordenação por preço
             if (sortBy === "menorPreco") {
                 return (a.valorTotal || 0) - (b.valorTotal || 0);
             } else if (sortBy === "maiorPreco") {
                 return (b.valorTotal || 0) - (a.valorTotal || 0);
             }
-            // Ordenação padrão por data de entrada (mais recente primeiro)
             return new Date(b.dataEHoraDeEntrada) - new Date(a.dataEHoraDeEntrada);
         });
 
@@ -152,7 +144,6 @@ function ScheduleList() {
         setSortBy("");
     };
 
-    // Função para formatar números com zero à esquerda
     const formatNumber = (num) => {
         return num.toString().padStart(2, '0');
     };
@@ -163,15 +154,12 @@ function ScheduleList() {
             <div className="w-full max-w-6xl bg-white rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
                 <div className="w-full max-w-6xl grid grid-cols-3 items-center p-2 bg-white rounded-t-3xl">
-                    {/* Espaço vazio */}
                     <div></div>
 
-                    {/* Título centralizado */}
                     <h2 className="text-center text-black text-3xl p-2 font-serif">
                         Lista de Agendamentos
                     </h2>
 
-                    {/* Botão alinhado à direita */}
                     <div className="flex justify-end">
                         <button
                             className="bg-[#6142FC] rounded-3xl p-2 me-7 mt-2 border hover:bg-[#7357ff]"
@@ -185,7 +173,6 @@ function ScheduleList() {
                 <div className="w-full max-w-6xl flex flex-col items-center justify-center p-5 bg-white rounded-b-3xl">
                     <div className="w-full max-w-6xl flex items-center justify-center gap-2 p-2 bg-white rounded-t-3xl">
                         <div className="flex w-full justify-end space-x-2 p-2">
-                            {/* Input de pesquisa */}
                             <input
                                 className="w-full p-2 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC] font-serif"
                                 type="text"
@@ -228,7 +215,6 @@ function ScheduleList() {
                         </div>
                     </div>
 
-                    {/* Menu de ordenação */}
                     <div className="w-full max-w-6xl flex justify-end p-2">
                         <div className="relative">
                             <button
@@ -288,12 +274,11 @@ function ScheduleList() {
                                     </tr>
                                 ))}
 
-                                {/* Linha do rodapé simulada */}
                                 <tr>
                                     <td colSpan="3" className="p-0">
                                         <div className="bg-[#6142FC] border-gray-300 rounded-b-3xl p-3">
                                             <div className="flex justify-center items-center gap-2 font-serif font-semibold">
-                                                <span className="text-white">
+                                                <span className="text-white font-black">
                                                     Total: {formatNumber(filteredStudios.length)} / {formatNumber(studios.length)}
                                                 </span>
                                             </div>
@@ -304,13 +289,12 @@ function ScheduleList() {
                         </table>
                     </div>
 
-                    <ModalDetails isOpen={isModalDetailsOpen}
+                    <ModalScheduleDetails isOpen={isModalDetailsOpen}
                         studio={selectedStudio}
                         closeModal={() => setIsModalDetailsOpen(false)}
-                        onStudioDelete={deleteStudioFromList}
                         onReloadStudios={reloadStudios}
                         onEditStudioClick={onEditStudioClick}>
-                    </ModalDetails>
+                    </ModalScheduleDetails>
                     <ModalAddStudio
                         isOpen={isModalAdditionOpen}
                         closeModal={() => setIsModalAdditionOpen(false)}

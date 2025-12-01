@@ -26,14 +26,16 @@ function Login() {
             });
 
             if (!response.ok) {
-                const errorText = await response.text(); // tenta pegar mensagem
+                const errorText = await response.text();
                 throw new Error(errorText || `Erro HTTP: ${response.status}`);
             };
 
             const data = await response.json();
             setUser(data);
             localStorage.setItem("user", JSON.stringify(data));
-            navigate("/studio");
+            data.ehUsuarioMusico
+                ? navigate("/studio")
+                : navigate("/schedule");
         } catch (erro) {
             alert("Erro na requisição: " + erro.message);
             console.error("Erro na requisição:", erro);
