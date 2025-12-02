@@ -1,47 +1,61 @@
-import { X, Trash2Icon, Pencil } from "lucide-react";
-import Status from "./Status"
+import { X, Phone, MapPin, Calendar, Clock, Save } from "lucide-react";
 
 export function ModalScheduleDetails({ isOpen, studio, closeModal, onEditStudioClick }) {
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="flex w-8/12 flex-col items-center p-6">
+            <div className="bg-white rounded-2xl w-[450px] p-8 relative">
+                <button
+                    onClick={closeModal}
+                    className="absolute top-4 right-4 border border-[#6142FC] bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
+                >
+                    <X size={18} />
+                </button>
 
-                <div className="w-full max-w-6xl flex items-center p-2 bg-slate-200 rounded-t-lg">
-                    <div className="flex p-2 flex-1">
-                        <button
-                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-red-400"
-                            onClick={() => closeModal()}
-                        >
-                            <X />
-                        </button>
-                    </div>
+                {/* Título principal */}
+                <h1 className="text-2xl font-bold text-center mb-2">Detalhes do Agendamento</h1>
 
-                    <div className="flex justify-center">
-                        <h2 className="text-4xl font-bold">Detalhes do Estúdio</h2>
-                    </div>
+                {/* Subtítulo */}
+                <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
+                    Agendar horário em <span className="text-[#6142FC]">Studio 54</span>
+                </h2>
 
-                    <div className="flex space-x-2 p-2 justify-end flex-1">
-                        <button
-                            className="bg-slate-400 text-white p-2 rounded-md hover:bg-green-400"
-                            onClick={() => onEditStudioClick()}
-                        >
-                            <Pencil />
-                        </button>
+                {/* Descrição do estúdio */}
+                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <h1 className="text-2xl font-bold text-center mb-2">Horário agendado por Jorge Teste para o dia 01/12/2025 de 14:00 até 18:00</h1>
+                   
+
+                    {/* Informações de contato */}
+                    <div className="mt-4 space-y-2">
+                        <div className="flex items-center gap-2 text-sm">
+                            <Phone size={14} className="text-gray-500" />
+                            <span className="font-medium">Telefone para contato:</span>
+                            <span className="text-gray-700">(62) 8932-9292</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                            <MapPin size={14} className="text-gray-500" />
+                            <span className="font-medium">Endereço:</span>
+                            <span className="text-gray-700">Rua Aparecida, Qd 57, Lt 60 - GO</span>
+                        </div>
                     </div>
                 </div>
 
-                <div className="w-full max-w-6xl flex flex-col items-center justify-center p-2 bg-slate-200 rounded-b-lg">
-                    <p className="w-full text-left p-2 font-bold text-3xl">Nome: {studio.nome}</p>
-                    <div className="flex w-full max-w-6xl">
-                        <p className="text-left mt-2 ms-2 mb-2 font-bold text-3xl">Status:</p>
-                        <Status
-                            isOpenStudioOnDetails={studio.estaAberto}>
-                        </Status>
+                {/* Formulário de agendamento */}
+                <div className="space-y-5">
+                    {/* Linha divisória */}
+                    <div className="border-t border-gray-400 my-2"></div>
+
+                    {/* Botões */}
+                    <div className="flex gap-3 pt-2">
+                        <button
+                            // onClick={onSave}
+                            className="flex-1 bg-[#6142FC] text-white font-medium py-3 rounded-3xl hover:bg-[#7357ff] transition flex items-center justify-center gap-2"
+                        >
+                            Cancelar Agendamento
+                        </button>
                     </div>
                 </div>
-
             </div>
         </div>
     );

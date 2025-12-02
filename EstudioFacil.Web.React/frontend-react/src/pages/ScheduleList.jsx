@@ -309,7 +309,8 @@ function ScheduleList() {
                     </ModalEditStudio>
                     <ModalUserSettings
                         isOpen={isModalSettingsOpen}
-                        closeModal={() => setIsModalSettingsOpen(false)}>
+                        closeModal={() => setIsModalSettingsOpen(false)}
+                        isMusicianUSer={false}>
                     </ModalUserSettings>
                 </div>
             </div>

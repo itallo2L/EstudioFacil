@@ -276,7 +276,8 @@ function StudioList() {
                         closeModal={() => setIsModalDetailsOpen(false)}
                         onStudioDelete={deleteStudioFromList}
                         onReloadStudios={reloadStudios}
-                        onEditStudioClick={onEditStudioClick}>
+                        onEditStudioClick={onEditStudioClick}
+                        hasAgendamento={false}>
                     </ModalDetails>
                     <ModalAddStudio
                         isOpen={isModalAdditionOpen}
@@ -292,7 +293,8 @@ function StudioList() {
                     </ModalEditStudio>
                     <ModalUserSettings
                         isOpen={isModalSettingsOpen}
-                        closeModal={() => setIsModalSettingsOpen(false)}>
+                        closeModal={() => setIsModalSettingsOpen(false)}
+                        isMusicianUSer={true}>
                     </ModalUserSettings>
                 </div>
             </div>
