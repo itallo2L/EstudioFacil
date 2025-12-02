@@ -226,18 +226,17 @@ function ModalUserSettings({ isOpen, closeModal, isMusicianUSer }) {
 
                 {/* Botões lado a lado */}
                 <div className="flex gap-3 w-full">
-                    {/* Botão Fechar Estúdio */}
-                    <button
-                        className="flex-1 bg-red-600 text-white font-semibold py-2 rounded-full hover:bg-red-700 transition"
-                    >
-                        Fechar Estúdio
-                    </button>
-
                     <button
                         onClick={isEdition ? onSaveClick : onLogOutClick}
                         className="flex-1 bg-[#6142FC] text-white font-semibold py-2 rounded-full hover:bg-[#7357ff] transition"
                     >
                         {isEdition ? "Salvar" : "Sair"}
+                    </button>
+
+                    <button
+                        className="flex-1 bg-red-600 text-white font-semibold py-2 rounded-full hover:bg-red-700 transition"
+                    >
+                        Fechar Estúdio
                     </button>
                 </div>
             </div>

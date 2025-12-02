@@ -14,18 +14,16 @@ export function ModalScheduleDetails({ isOpen, studio, closeModal, onEditStudioC
                 </button>
 
                 {/* Título principal */}
-                <h1 className="text-2xl font-bold text-center mb-2">Detalhes do Agendamento</h1>
+                <h1 className="text-2xl font-bold text-center mb-2">Agendamento</h1>
 
                 {/* Subtítulo */}
                 <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
-                    Agendar horário em <span className="text-[#6142FC]">Studio 54</span>
+                    <span className="text-[#6142FC]">Studio 54</span>
                 </h2>
 
                 {/* Descrição do estúdio */}
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <h1 className="text-2xl font-bold text-center mb-2">Horário agendado por Jorge Teste para o dia 01/12/2025 de 14:00 até 18:00</h1>
-                   
-
+                    <h1 className="text-2xl font-bold text-center mb-2">Horário agendado para o dia 01/12/2025 de 14:00 até 18:00 com valor total de R$ 400,00</h1>
                     {/* Informações de contato */}
                     <div className="mt-4 space-y-2">
                         <div className="flex items-center gap-2 text-sm">
