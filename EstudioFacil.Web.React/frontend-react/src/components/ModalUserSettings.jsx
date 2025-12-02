@@ -51,7 +51,7 @@ function ModalUserSettings({ isOpen, closeModal }) {
                 {/* Botão X */}
                 <button
                     onClick={closeModal}
-                    className="absolute top-4 left-4 border border-[#6142FC] bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
+                    className="absolute top-4 right-4 border border-[#6142FC] bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
                 >
                     <X size={18} />
                 </button>
@@ -59,7 +59,7 @@ function ModalUserSettings({ isOpen, closeModal }) {
                 {/* Botão lápis */}
                 <button
                     onClick={toggleEdition}
-                    className="absolute top-4 right-4 bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
+                    className="absolute top-4 left-4 bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
                 >
                     {isEdition ? <LogOut size={20} /> : <Pencil size={20} />}
                 </button>
