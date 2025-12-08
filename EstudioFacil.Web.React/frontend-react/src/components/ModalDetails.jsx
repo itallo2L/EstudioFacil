@@ -43,6 +43,11 @@ export function ModalDetails({ isOpen, closeModal, onSave, hasAgendamento = fals
                                 <span className="font-medium">Endereço:</span>
                                 <span className="text-gray-700">Av Goiânia, N54 - GO</span>
                             </div>
+                            <div className="flex items-center gap-2 text-sm">
+                                <MapPin size={14} className="text-gray-500" />
+                                <span className="font-medium">Valor por hora:</span>
+                                <span className="text-gray-700">R$ 100,00</span>
+                            </div>
                         </div>
                     </div>
 
@@ -183,6 +188,11 @@ export function ModalDetails({ isOpen, closeModal, onSave, hasAgendamento = fals
                             <MapPin size={14} className="text-gray-500" />
                             <span className="font-medium">Endereço:</span>
                             <span className="text-gray-700">Av Goiânia, N54 - GO</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm">
+                            <MapPin size={14} className="text-gray-500" />
+                            <span className="font-medium">Valor por hora:</span>
+                            <span className="text-gray-700">R$ 100,00</span>
                         </div>
                     </div>
                 </div>

@@ -65,7 +65,7 @@ function CreateMusicianAccount() {
                 </div>
                 <div className="flex mb-2">
                     <input
-                        className="w-full p-2 rounded-full border border-gray-400"
+                        className="w-full p-2 rounded-full border border-[#6142FC]"
                         onChange={(e) => setUserName(e.target.value)}
                         type="text" />
                 </div>
@@ -74,7 +74,7 @@ function CreateMusicianAccount() {
                 </div>
                 <div className="flex mb-2">
                     <input
-                        className="w-full p-2 rounded-full border border-gray-400"
+                        className="w-full p-2 rounded-full border border-[#6142FC]"
                         onChange={(e) => setUserPhoneNumber(e.target.value)}
                         type="text" />
                 </div>
@@ -83,7 +83,7 @@ function CreateMusicianAccount() {
                 </div>
                 <div className="flex mb-2">
                     <input
-                        className="w-full p-2 rounded-full border border-gray-400"
+                        className="w-full p-2 rounded-full border border-[#6142FC]"
                         onChange={(e) => setUserCpf(e.target.value)}
                         type="text" />
                 </div>
@@ -92,7 +92,7 @@ function CreateMusicianAccount() {
                 </div>
                 <div className="flex mb-2">
                     <input
-                        className="w-full p-2 rounded-full border border-gray-400"
+                        className="w-full p-2 rounded-full border border-[#6142FC]"
                         onChange={(e) => setUserEmail(e.target.value)}
                         type="text" />
                 </div>
@@ -101,13 +101,13 @@ function CreateMusicianAccount() {
                 </div>
                 <div className="flex mb-2">
                     <input
-                        className="w-full p-2 rounded-full border border-gray-400"
+                        className="w-full p-2 rounded-full border border-[#6142FC]"
                         onChange={(e) => setUserPassword(e.target.value)}
                         type="password" />
                 </div>
                 <div className="flex">
                     <button
-                        className="w-full bg-slate-500 flex justify-center p-3 rounded-full hover:bg-slate-800 text-2xl font-mono font-bold text-white"
+                        className="w-full flex justify-center p-3 rounded-full border-[#6142FC] bg-[#6142FC] hover:bg-[#7357ff] transition  text-2xl font-mono font-bold text-white"
                         onClick={() => onProceed()}
                     >
                         Prosseguir

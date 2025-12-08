@@ -15,6 +15,7 @@ export function ModalScheduleDetails({ isOpen, studio, closeModal, onEditStudioC
 
                 {/* Título principal */}
                 <h1 className="text-2xl font-bold text-center mb-2">Agendamento</h1>
+                <div className="border-t border-gray-400 my-2"></div>
 
                 {/* Subtítulo */}
                 <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
@@ -42,7 +43,6 @@ export function ModalScheduleDetails({ isOpen, studio, closeModal, onEditStudioC
                 {/* Formulário de agendamento */}
                 <div className="space-y-5">
                     {/* Linha divisória */}
-                    <div className="border-t border-gray-400 my-2"></div>
 
                     {/* Botões */}
                     <div className="flex gap-3 pt-2">
