@@ -1,7 +1,8 @@
 import { X, Phone, MapPin, Clock } from "lucide-react";
+import { toast, ToastContainer } from 'react-toastify';
 import { useState } from "react";
 
-export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento }) {
+export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuccess, onError }) {
     const [firstValue, setFirstValue] = useState('');
     const [secondValue, setSecondValue] = useState('');
     const [totalValue, setTotalValue] = useState('');
@@ -63,16 +64,17 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento }) {
         // Remove "R$" e espaços, depois divide pela vírgula
         const partes = valor.replace('R$', '').trim().split(',');
         return parseInt(partes[0].replace(/\./g, '')) || 0;
-    }
+    };
 
     async function adicionarAgendamento() {
         if (!scheduleDate || !firstValue || !secondValue) {
-            alert('Por favor, preencha todos os campos: data, horário de entrada e horário de saída.');
+            // Usa a função de erro passada por prop
+            onError('Por favor, preencha todos os campos: data, horário de entrada e horário de saída.');
             return;
         }
 
         if (secondValue <= firstValue) {
-            alert('O horário de saída deve ser maior que o horário de entrada.');
+            onError('O horário de saída deve ser maior que o horário de entrada.');
             return;
         }
 
@@ -87,11 +89,11 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento }) {
             idEstudio: studio.id
         };
 
-        console.log('Dados enviados:', dados); // Para debug
+        console.log('Dados enviados:', dados);
 
         try {
             const response = await fetch("https://localhost:7144/api/Agendamento", {
-                method: 'PUT', // Verifique se é POST ou PUT
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -99,15 +101,22 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento }) {
             });
 
             if (response.ok) {
-                alert('Agendamento realizado com sucesso!');
+                // Usa a função de sucesso passada por prop
+                onSuccess();
+                
+                // Fecha o modal e limpa os campos
                 closeModal();
+                setFirstValue('');
+                setSecondValue('');
+                setTotalValue('');
+                setScheduleDate('');
             } else {
                 const error = await response.text();
-                alert(`Erro ao agendar: ${error}`);
+                onError(`Erro ao agendar: ${error}`);
             }
         } catch (error) {
             console.error('Erro:', error);
-            alert('Erro ao conectar com o servidor.');
+            onError('Erro ao conectar com o servidor.');
         }
     };
 

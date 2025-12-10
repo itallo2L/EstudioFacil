@@ -5,11 +5,25 @@ import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
 import Status from "../components/Status"
 import { ChevronLeft, Settings, ArrowDownUp, Calendar } from "lucide-react";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function StudioList() {
     const [studios, setStudios] = useState([
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
+
+    const showSuccessToast = (message = 'Agendamento realizado com sucesso!') => {
+        toast.success(message);
+    };
+
+    const showErrorToast = (message) => {
+        toast.error(message);
+    };
+
+    function salvarAgendamento() {
+
+    };
 
     function onUserSettingsClick() {
         setIsModalSettingsOpen(true);
@@ -173,7 +187,7 @@ function StudioList() {
 
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6 font-serif">
-
+            <ToastContainer />
             <div className="w-full max-w-6xl bg-white rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
                 <div className="w-full max-w-6xl grid grid-cols-3 items-center p-2 bg-white rounded-t-3xl">
@@ -305,10 +319,9 @@ function StudioList() {
                     <ModalDetails isOpen={isModalDetailsOpen}
                         studio={selectedStudio}
                         closeModal={() => setIsModalDetailsOpen(false)}
-                        onStudioDelete={deleteStudioFromList}
-                        onReloadStudios={reloadStudios}
-                        onEditStudioClick={onEditStudioClick}
-                        hasAgendamento={haveAgendamento}>
+                        hasAgendamento={haveAgendamento}
+                        onSuccess={() => showSuccessToast()}
+                        onError={(message) => showErrorToast(message)}>
                     </ModalDetails>
                     <ModalAddStudio
                         isOpen={isModalAdditionOpen}
