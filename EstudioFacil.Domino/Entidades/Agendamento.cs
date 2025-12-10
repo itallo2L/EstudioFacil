@@ -22,6 +22,10 @@ namespace EstudioFacil.Dominio.Entidades
         [Column]
         public EstiloMusical? EstiloMusical { get; set; }
         [Column]
+        public string? Telefone { get; set; }
+        [Column]
+        public string? Endereco { get; set; }
+        [Column]
         public int IdEstudio { get; set; }
     }
 }

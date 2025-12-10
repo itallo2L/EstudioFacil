@@ -1,73 +1,42 @@
 import { useEffect, useState } from "react";
 import { ModalScheduleDetails } from "../components/ModalScheduleDetails"
-import ModalAddStudio from "../components/ModalAddStudio"
-import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
-import Status from "../components/Status"
-import { ChevronLeft, Settings, ArrowDownUp, Calendar } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Settings, ArrowDownUp } from "lucide-react";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function ScheduleList() {
-    const [studios, setStudios] = useState([
-        JSON.parse(localStorage.getItem("studios")) || []
+    const [schedules, setSchedules] = useState([
+        JSON.parse(localStorage.getItem("schedules")) || []
     ]);
-    const [studio, setStudio] = useState([
-        JSON.parse(localStorage.getItem("studio")) || []
-    ]);
+
+    const showSuccessToast = (message) => {
+        toast.success(message);
+    };
+
+    const showErrorToast = (message) => {
+        toast.error(message);
+    };
 
     function onUserSettingsClick() {
         setIsModalSettingsOpen(true);
     };
 
     const [isModalDetailsOpen, setIsModalDetailsOpen] = useState(false);
-    const [isModalAdditionOpen, setIsModalAdditionOpen] = useState(false);
-    const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [isModalSettingsOpen, setIsModalSettingsOpen] = useState(false);
-    const [selectedStudio, setSelectedStudio] = useState(null);
+    const [selectedSchedules, setSelectedSchedules] = useState(null);
 
-    function onSeeDetailsClick(studio) {
-        setSelectedStudio(studio);
+    function onSeeDetailsClick(schedule) {
+        setSelectedSchedules(schedule);
         setIsModalDetailsOpen(true);
     };
 
-    function onAddStudioClick() {
-        setIsModalAdditionOpen(true);
-    };
-
-    function onEditStudioClick() {
-        setIsModalEditOpen(true);
-    };
-
-    const addStudioToList = (newStudio) => {
-        setStudios(prevStudios => [newStudio, ...prevStudios]);
-    };
-
-    const updatedStudioList = (editedStudio) => {
-        const listWithUpdatedStudios = studios.map(studio => studio.id === editedStudio.id ? {
-            ...studio, nomeResponsavel: editedStudio.nomeResponsavel
-        } : studio);
-        setStudios(listWithUpdatedStudios);
-        setIsModalDetailsOpen(false);
-    };
-
-    const reloadStudios = async () => {
-        try {
-            const response = await fetch("https://localhost:7144/api/Agendamento", {
-                method: "GET",
-            });
-            const data = await response.json();
-            setStudios(data);
-        } catch (error) {
-            console.error("Erro ao recarregar estúdios:", error);
-        };
-    };
+    useEffect(() => {
+        localStorage.setItem("schedules", JSON.stringify(schedules));
+    }, [schedules]);
 
     useEffect(() => {
-        localStorage.setItem("studios", JSON.stringify(studios));
-    }, [studios]);
-
-    useEffect(() => {
-        const fetchStudios = async () => {
+        const fetchSchedules = async () => {
             const response = await fetch(
                 "https://localhost:7144/api/Agendamento",
                 {
@@ -76,43 +45,42 @@ function ScheduleList() {
             );
             const data = await response.json();
             data.sort((a, b) => b.id - a.id);
-            setStudios(data);
+            setSchedules(data);
         };
-        fetchStudios();
+        fetchSchedules();
     }, []);
 
-    const [filter, setFilter] = useState("Todos");
     const [search, setSearch] = useState("");
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
     const [sortBy, setSortBy] = useState("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-    const filteredStudios = studios
-        .filter(studio => {
+    const filteredSchedules = schedules
+        .filter(schedule => {
             // Filtro por nomeResponsavel E valorTotal
             const searchMatch = search === "" ||
-                studio.nomeResponsavel?.toLowerCase().includes(search.toLowerCase()) ||
-                studio.valorTotal?.toString().includes(search);
+                schedule.nomeResponsavel?.toLowerCase().includes(search.toLowerCase()) ||
+                schedule.valorTotal?.toString().includes(search);
 
             let dateMatch = true;
             if (startDate || endDate) {
-                const studioDate = studio.dataEHoraDeEntrada;
+                const scheduleDate = schedule.dataEHoraDeEntrada;
 
-                if (studioDate) {
-                    const studioDateObj = new Date(studioDate);
+                if (scheduleDate) {
+                    const scheduleDateObj = new Date(scheduleDate);
                     // Ajusta para considerar apenas a data (ignora hora)
-                    studioDateObj.setHours(0, 0, 0, 0);
+                    scheduleDateObj.setHours(0, 0, 0, 0);
 
                     const startDateObj = startDate ? new Date(startDate) : null;
                     const endDateObj = endDate ? new Date(endDate) : null;
 
                     if (startDateObj && endDateObj) {
-                        dateMatch = studioDateObj >= startDateObj && studioDateObj <= endDateObj;
+                        dateMatch = scheduleDateObj >= startDateObj && scheduleDateObj <= endDateObj;
                     } else if (startDateObj) {
-                        dateMatch = studioDateObj >= startDateObj;
+                        dateMatch = scheduleDateObj >= startDateObj;
                     } else if (endDateObj) {
-                        dateMatch = studioDateObj <= endDateObj;
+                        dateMatch = scheduleDateObj <= endDateObj;
                     }
                 } else {
                     dateMatch = false;
@@ -135,11 +103,6 @@ function ScheduleList() {
         setIsMenuOpen(false);
     };
 
-    const clearDateFilter = () => {
-        setStartDate("");
-        setEndDate("");
-    };
-
     const clearAllFilters = () => {
         setSearch("");
         setStartDate("");
@@ -151,9 +114,13 @@ function ScheduleList() {
         return num.toString().padStart(2, '0');
     };
 
+    const removerAgendamentoDaLista = (scheduleId) => {
+        setSchedules(prevSchedules => prevSchedules.filter(s => s.id != scheduleId));
+    };
+
     return (
         <div className="w-screen h-screen flex flex-col items-center p-6 ">
-
+            <ToastContainer />
             <div className="w-full max-w-6xl bg-white rounded-3xl relative shadow-[0_0_25px#6142FC]">
 
                 <div className="w-full max-w-6xl grid grid-cols-3 items-center p-2 bg-white rounded-t-3xl">
@@ -257,23 +224,23 @@ function ScheduleList() {
                             <thead>
                                 <tr className="bg-[#6142FC] text-white font-serif">
                                     <th className="p-3 text-center">Responsável</th>
-                                    <th className="p-3 text-center">Data de Entrada</th>
+                                    <th className="p-3 text-center">Data</th>
                                     <th className="p-3 text-center">Valor Total</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredStudios.map((studio, index) => (
+                                {filteredSchedules.map((schedule, index) => (
                                     <tr
-                                        key={studio.id}
+                                        key={schedule.id}
                                         className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'
                                             } border-b border-gray-200 hover:bg-[#8c77f7] hover:text-white cursor-pointer transition-colors`}
-                                        onClick={() => onSeeDetailsClick(studio)}
+                                        onClick={() => onSeeDetailsClick(schedule)}
                                     >
-                                        <td className="p-3 font-serif font-semibold text-center">{studio.nomeResponsavel}</td>
+                                        <td className="p-3 font-serif font-semibold text-center">{schedule.nomeResponsavel}</td>
                                         <td className="p-3 text-center font-medium">
-                                            {new Date(studio.dataEHoraDeEntrada).toLocaleDateString('pt-BR')}
+                                            {new Date(schedule.dataEHoraDeEntrada).toLocaleDateString('pt-BR')}
                                         </td>
-                                        <td className="p-3 font-medium text-center text-green-700">R$ {studio.valorTotal},00</td>
+                                        <td className="p-3 font-medium text-center text-green-700">R$ {schedule.valorTotal},00</td>
                                     </tr>
                                 ))}
 
@@ -282,7 +249,7 @@ function ScheduleList() {
                                         <div className="bg-[#6142FC] border-gray-300 rounded-b-3xl p-3">
                                             <div className="flex justify-center items-center gap-2 font-serif font-semibold">
                                                 <span className="text-white font-black">
-                                                    Total: {formatNumber(filteredStudios.length)} / {formatNumber(studios.length)}
+                                                    Total: {formatNumber(filteredSchedules.length)} / {formatNumber(schedules.length)}
                                                 </span>
                                             </div>
                                         </div>
@@ -293,23 +260,12 @@ function ScheduleList() {
                     </div>
 
                     <ModalScheduleDetails isOpen={isModalDetailsOpen}
-                        studio={selectedStudio}
+                        schedule={selectedSchedules}
                         closeModal={() => setIsModalDetailsOpen(false)}
-                        onReloadStudios={reloadStudios}
-                        onEditStudioClick={onEditStudioClick}>
+                        onSuccess={(message) => showSuccessToast(message)}
+                        onError={(message) => showErrorToast(message)}
+                        onScheduleRemoved={removerAgendamentoDaLista}>
                     </ModalScheduleDetails>
-                    <ModalAddStudio
-                        isOpen={isModalAdditionOpen}
-                        closeModal={() => setIsModalAdditionOpen(false)}
-                        onStudioAdded={addStudioToList}
-                        onReloadStudios={reloadStudios}>
-                    </ModalAddStudio>
-                    <ModalEditStudio
-                        isOpen={isModalEditOpen}
-                        studio={selectedStudio}
-                        closeModal={() => setIsModalEditOpen(false)}
-                        onStudioEdited={updatedStudioList}>
-                    </ModalEditStudio>
                     <ModalUserSettings
                         isOpen={isModalSettingsOpen}
                         closeModal={() => setIsModalSettingsOpen(false)}

@@ -15,6 +15,8 @@ namespace EstudioFacil.Infra.Migracoes
                 .WithColumn("DataEHoraDeSaida").AsDateTime().NotNullable()
                 .WithColumn("ValorTotal").AsDecimal().NotNullable()
                 .WithColumn("EstiloMusical").AsInt32().Nullable()
+                .WithColumn("Telefone").AsString().Nullable()
+                .WithColumn("Endereco").AsString().Nullable()
                 .WithColumn("IdEstudio").AsInt64().ForeignKey("EstudioMusical", "Id").OnDeleteOrUpdate(System.Data.Rule.Cascade);
         }
 

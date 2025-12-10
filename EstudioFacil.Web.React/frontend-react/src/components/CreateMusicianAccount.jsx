@@ -8,6 +8,7 @@ function CreateMusicianAccount() {
     const [userName, setUserName] = useState("");
     const [userPhoneNumber, setUserPhoneNumber] = useState("");
     const [userCpf, setUserCpf] = useState("");
+    const [userAddress, setUserAddress] = useState("");
     const [userEmail, setUserEmail] = useState("");
     const [userPassword, setUserPassword] = useState("");
 
@@ -127,6 +128,7 @@ function CreateMusicianAccount() {
         if (!userName.trim()) newErrors.userName = "Nome é obrigatório";
         if (!userPhoneNumber.trim()) newErrors.userPhoneNumber = "Telefone é obrigatório";
         if (!userCpf.trim()) newErrors.userCpf = "CPF é obrigatório";
+        if (!userAddress.trim()) newErrors.userAddress = "Endereço é obrigatório";
         if (!userEmail.trim()) newErrors.userEmail = "Email é obrigatório";
         if (!userPassword.trim()) newErrors.userPassword = "Senha é obrigatória";
 
@@ -162,6 +164,7 @@ function CreateMusicianAccount() {
             nomeDoResponsavel: userName,
             telefone: userPhoneNumber.replace(/\D/g, ''), // Envia apenas números
             cPF: userCpf.replace(/\D/g, ''), // Envia apenas números
+            endereco: userAddress,
             enderecoDeEmail: userEmail,
             hashDaSenha: userPassword,
             ehUsuarioMusico: true
@@ -281,6 +284,22 @@ function CreateMusicianAccount() {
                 </div>
                 {errors.userCpf && (
                     <p className="text-red-500 text-sm mb-2 -mt-2">{errors.userCpf}</p>
+                )}
+
+                {/* Endereço */}
+                <div className="flex">
+                    <p className="p-2 h-8 flex items-center font-mono font-bold text-xl">Endereço</p>
+                </div>
+                <div className="flex mb-2">
+                    <input
+                        className={getInputClass('userAddress')}
+                        onChange={(e) => setUserAddress(e.target.value)}
+                        type="text"
+                        value={userAddress}
+                    />
+                </div>
+                {errors.userAddress && (
+                    <p className="text-red-500 text-sm mb-2">{errors.userAddress}</p>
                 )}
 
                 {/* Email */}

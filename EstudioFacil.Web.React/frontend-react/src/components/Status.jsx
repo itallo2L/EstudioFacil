@@ -1,17 +1,13 @@
-function Status({ isOpenStudioOnList, isOpenStudioOnDetails }) {
-    if (isOpenStudioOnList != undefined) {
-        if (isOpenStudioOnList)
-            return (<p className="text-green-700">Aberto</p>);
-        else if (!isOpenStudioOnList)
-            return (<p className="text-red-700">Fechado</p>);
+function Status({ valor }) {
+
+    function valorVerde(valor) {
+        return (<span className="font-mono text-green-700">{`R$ ${valor},00`}</span>);
     };
 
-    if (isOpenStudioOnDetails != undefined) {
-        if (isOpenStudioOnDetails)
-            return (<p className="text-left p-2 font-bold text-3xl text-green-700">Aberto</p>);
-        else
-            return (<p className="text-left p-2 font-bold text-3xl text-red-700">Fechado</p>);
-    };
+    if (valor)
+        return (<p className="font-serif">Valor por hora: {valorVerde(valor)}</p>);
+    else if (!valor)
+        return (<p>''</p>);
 
     return null;
 };

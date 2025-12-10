@@ -4,7 +4,7 @@ import ModalAddStudio from "../components/ModalAddStudio"
 import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
 import Status from "../components/Status"
-import { ChevronLeft, Settings, ArrowDownUp, Calendar } from "lucide-react";
+import { Settings, ArrowDownUp } from "lucide-react";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -322,19 +322,7 @@ function StudioList() {
                                             border border-[#6142FC] shadow-[0_0_5px_#6142FC]"
                                     onClick={() => onSeeDetailsClick(studio)}>
                                     <p className="text-xl text-black font-bold rounded-s-md">{studio.nome}</p>
-                                    <Status isOpenStudioOnList={studio.estaAberto}></Status>
-                                    {/* Exibir preço se existir */}
-                                    {studio.preco && (
-                                        <p className="text-black mt-1 font-semibold">
-                                            R$ {studio.preco.toFixed(2)}
-                                        </p>
-                                    )}
-                                    {/* Exibir data se existir */}
-                                    {(studio.dataCriacao || studio.dataAgendamento || studio.data) && (
-                                        <p className="text-sm text-gray-600 mt-1">
-                                            {new Date(studio.dataCriacao || studio.dataAgendamento || studio.data).toLocaleDateString('pt-BR')}
-                                        </p>
-                                    )}
+                                    <Status valor={studio.valorDaHora}></Status>
                                 </div>
                             </li>
                         ))}

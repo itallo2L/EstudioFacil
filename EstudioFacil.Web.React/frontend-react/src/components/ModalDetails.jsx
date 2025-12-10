@@ -1,5 +1,4 @@
-import { X, Phone, MapPin, Clock } from "lucide-react";
-import { toast, ToastContainer } from 'react-toastify';
+import { X, Phone, MapPin, Clock, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 
 export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuccess, onError }) {
@@ -8,7 +7,12 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
     const [totalValue, setTotalValue] = useState('');
     const [scheduleDate, setScheduleDate] = useState('');
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-    const [agendamentoAtual, setagendamentoAtual] = useState(JSON.parse(localStorage.getItem("agendamentoAtual")));
+    const [agendamentoAtual, setAgendamentoAtual] = useState(JSON.parse(localStorage.getItem("agendamentoAtual")));
+
+    // Novo estado para controlar a modal de confirmação
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isCancelling, setIsCancelling] = useState(false); // Para mostrar loading durante o cancelamento
+
     function TelefoneFormatado({ telefone }) {
         const formatarTelefone = (numero) => {
             if (!numero) return '';
@@ -49,26 +53,19 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
         setScheduleDate(event.target.value);
     };
 
-    // Função para formatar a data e hora para o formato ISO
     const formatarDataHora = (data, hora) => {
         if (!data || !hora) return '';
-
-        // Converte hora (8, 9, 10...) para formato HH:00:00
         const horaFormatada = hora.toString().padStart(2, '0') + ':00:00';
-
-        // Retorna no formato ISO: yyyy-mm-ddTHH:mm:ss
         return `${data}T${horaFormatada}`;
     };
 
     function extrairNumeroMonetario(valor) {
-        // Remove "R$" e espaços, depois divide pela vírgula
         const partes = valor.replace('R$', '').trim().split(',');
         return parseInt(partes[0].replace(/\./g, '')) || 0;
     };
 
     async function adicionarAgendamento() {
         if (!scheduleDate || !firstValue || !secondValue) {
-            // Usa a função de erro passada por prop
             onError('Por favor, preencha todos os campos: data, horário de entrada e horário de saída.');
             return;
         }
@@ -86,6 +83,8 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
             dataEHoraDeEntrada: formatarDataHora(scheduleDate, firstValue),
             dataEHoraDeSaida: formatarDataHora(scheduleDate, secondValue),
             valorTotal: valorTotal,
+            telefone: user.telefone,
+            endereco: user.endereco,
             idEstudio: studio.id
         };
 
@@ -101,10 +100,7 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
             });
 
             if (response.ok) {
-                // Usa a função de sucesso passada por prop
                 onSuccess('Agendamento realizado com sucesso!');
-
-                // Fecha o modal e limpa os campos
                 closeModal();
                 setFirstValue('');
                 setSecondValue('');
@@ -120,11 +116,14 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
         }
     };
 
+    // Função modificada para abrir a modal de confirmação
     function cancelSchedule() {
-        return excluirAgendamento();
+        setShowConfirmModal(true);
     };
 
-    async function excluirAgendamento() {
+    // Função para confirmar o cancelamento
+    async function confirmarCancelamento() {
+        setIsCancelling(true);
         try {
             const response = await fetch(`https://localhost:7144/api/Agendamento/${agendamentoAtual.id}`, {
                 method: 'DELETE',
@@ -140,15 +139,25 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
                 setSecondValue('');
                 setTotalValue('');
                 setScheduleDate('');
+                setShowConfirmModal(false);
                 closeModal();
             } else {
                 const error = await response.text();
                 onError(`Erro ao excluir: ${error}`);
+                setShowConfirmModal(false);
             }
         } catch (error) {
             console.error('Erro:', error);
             onError('Erro ao conectar com o servidor.');
+            setShowConfirmModal(false);
+        } finally {
+            setIsCancelling(false);
         }
+    };
+
+    // Função para cancelar a ação e fechar a modal
+    function cancelarAcao() {
+        setShowConfirmModal(false);
     };
 
     function onSave() {
@@ -157,8 +166,229 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
 
     if (!isOpen) return null;
 
+    function textoVerde(texto) {
+        return <span className="text-green-600">{texto}</span>;
+    };
+
+    // Modal de confirmação de cancelamento
+    const ConfirmModal = () => {
+        if (!showConfirmModal) return null;
+
+        return (
+            <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                <div className="bg-white rounded-2xl w-[400px] p-8 relative">
+                    {/* Botão X no canto superior direito - POSIÇÃO ABSOLUTA */}
+                    <button
+                        onClick={cancelarAcao}
+                        disabled={isCancelling}
+                        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 transition"
+                    >
+                        ×
+                    </button>
+
+                    <div className="flex flex-col items-center text-center">
+                        {/* Ícone de alerta */}
+                        <div className="mb-4 p-3 bg-red-100 rounded-full">
+                            <AlertTriangle size={48} className="text-red-600" />
+                        </div>
+
+                        {/* Título */}
+                        <h2 className="text-xl font-bold mb-2">Confirmar Cancelamento</h2>
+
+                        {/* Mensagem */}
+                        <p className="text-gray-600 mb-6">
+                            Tem certeza que deseja cancelar este agendamento? Esta ação não pode ser desfeita.
+                        </p>
+
+                        {/* Detalhes do agendamento (opcional) */}
+                        <div className="bg-gray-50 p-4 rounded-lg w-full mb-6">
+                            <p className="font-medium text-gray-800">{studio.nome}</p>
+                            <p className="text-sm text-gray-600 mt-1">
+                                {agendamentoAtual.dataFormatada} • {agendamentoAtual.horaEntradaFormatada} - {agendamentoAtual.horaSaidaFormatada}
+                            </p>
+                            <p className="text-sm font-medium text-gray-800 mt-2">
+                                Valor: R$ {agendamentoAtual.valorTotal},00
+                            </p>
+                        </div>
+
+                        {/* Botões de ação */}
+                        <div className="flex gap-3 w-full">
+                            <button
+                                onClick={cancelarAcao}
+                                disabled={isCancelling}
+                                className="flex-1 bg-gray-200 text-gray-800 font-medium py-3 hover:bg-gray-300 transition disabled:opacity-50 rounded-full"
+                            >
+                                Voltar
+                            </button>
+
+                            <button
+                                onClick={confirmarCancelamento}
+                                disabled={isCancelling}
+                                className="flex-1 bg-red-600 text-white font-medium py-3 rounded-full hover:bg-red-700 transition flex items-center justify-center gap-2 disabled:opacity-50"
+                            >
+                                {isCancelling ? (
+                                    <>
+                                        <span className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></span>
+                                        Cancelando...
+                                    </>
+                                ) : (
+                                    "Cancelar"
+                                )}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     if (!hasAgendamento) {
         return (
+            <>
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl w-[450px] p-8 relative">
+                        <button
+                            onClick={closeModal}
+                            className="absolute top-4 right-4 border border-[#6142FC] bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
+                        >
+                            <X size={18} />
+                        </button>
+
+                        <h1 className="text-2xl font-bold text-center mb-2">Agendamento</h1>
+                        <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
+                            Agendar horário em <span className="text-[#6142FC]">{studio.nome}</span>
+                        </h2>
+
+                        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                            <h3 className="text-sm font-semibold mb-2">Descrição:</h3>
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                                {studio.descricao}
+                            </p>
+
+                            <div className="mt-4 space-y-2">
+                                <div className="flex items-center gap-2 text-sm">
+                                    <Phone size={14} className="text-gray-500" />
+                                    <span className="font-medium">Telefone para contato:</span>
+                                    <TelefoneFormatado telefone={studio.telefone} />
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                    <MapPin size={14} className="text-gray-500" />
+                                    <span className="font-medium">Endereço:</span>
+                                    <span className="text-gray-700">{studio.endereco}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                    <MapPin size={14} className="text-gray-500" />
+                                    <span className="font-medium">Valor por hora:</span>
+                                    <span className="text-gray-700">{`R$ ${studio.valorDaHora},00`}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="space-y-5">
+                            <div className="space-y-5">
+                                <div className="flex gap-4">
+                                    <div className="flex-1">
+                                        <label className="text-sm font-semibold mb-1 block">Data</label>
+                                        <input
+                                            className="p-2 w-full rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                            type="date"
+                                            onChange={obterData}
+                                            value={scheduleDate}
+                                            required
+                                        />
+                                    </div>
+
+                                    <div className="flex-1">
+                                        <label className="text-sm font-semibold mb-1 block">Valor Total</label>
+                                        <input
+                                            className="p-2 w-full text-center rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC] bg-gray-50"
+                                            type="text"
+                                            disabled={true}
+                                            value={totalValue || 'Selecione os horários'}
+                                            readOnly
+                                        />
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label className="text-sm font-semibold mb-1 block">Horário</label>
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex items-center gap-2 flex-1">
+                                            <Clock size={16} className="text-gray-500" />
+                                            <span className="text-sm text-gray-600">De</span>
+                                            <select
+                                                onChange={onSelectFirstValue}
+                                                value={firstValue}
+                                                className="p-2 w-3/4 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                                required
+                                            >
+                                                <option value="">Selecione</option>
+                                                <option value="8">8:00</option>
+                                                <option value="9">9:00</option>
+                                                <option value="10">10:00</option>
+                                                <option value="11">11:00</option>
+                                                <option value="12">12:00</option>
+                                                <option value="13">13:00</option>
+                                                <option value="14">14:00</option>
+                                                <option value="15">15:00</option>
+                                                <option value="16">16:00</option>
+                                                <option value="17">17:00</option>
+                                                <option value="18">18:00</option>
+                                            </select>
+                                        </div>
+                                        <div className="flex items-center gap-2 flex-1">
+                                            <span className="text-sm text-gray-600">Até</span>
+                                            <select
+                                                onChange={onSelectSecondValue}
+                                                value={secondValue}
+                                                className="p-2 w-3/4 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                                required
+                                            >
+                                                <option value="">Selecione</option>
+                                                <option value="9">9:00</option>
+                                                <option value="10">10:00</option>
+                                                <option value="11">11:00</option>
+                                                <option value="12">12:00</option>
+                                                <option value="13">13:00</option>
+                                                <option value="14">14:00</option>
+                                                <option value="15">15:00</option>
+                                                <option value="16">16:00</option>
+                                                <option value="17">17:00</option>
+                                                <option value="18">18:00</option>
+                                                <option value="19">19:00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="border-t border-gray-400 my-2"></div>
+
+                            <div className="flex gap-3 pt-2">
+                                <button
+                                    onClick={onSave}
+                                    className="flex-1 bg-[#6142FC] text-white font-semibold py-3 rounded-3xl hover:bg-[#7357ff] transition flex items-center justify-center gap-2"
+                                >
+                                    Agendar
+                                </button>
+
+                                <button
+                                    onClick={closeModal}
+                                    className="flex-1 bg-red-600 text-white font-semibold py-2 rounded-full hover:bg-red-700 transition"
+                                >
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ConfirmModal />
+            </>
+        );
+    };
+
+    return (
+        <>
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-2xl w-[450px] p-8 relative">
                     <button
@@ -168,17 +398,22 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
                         <X size={18} />
                     </button>
 
+                    {/* Título principal */}
                     <h1 className="text-2xl font-bold text-center mb-2">Agendamento</h1>
+
+                    {/* Subtítulo */}
                     <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
-                        Agendar horário em <span className="text-[#6142FC]">{studio.nome}</span>
+                        <span className="text-[#6142FC]">{studio.nome}</span>
                     </h2>
 
+                    {/* Descrição do estúdio */}
                     <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <h3 className="text-sm font-semibold mb-2">Descrição:</h3>
                         <p className="text-sm text-gray-600 leading-relaxed">
                             {studio.descricao}
                         </p>
 
+                        {/* Informações de contato */}
                         <div className="mt-4 space-y-2">
                             <div className="flex items-center gap-2 text-sm">
                                 <Phone size={14} className="text-gray-500" />
@@ -198,171 +433,30 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
                         </div>
                     </div>
 
+                    {/* Formulário de agendamento */}
                     <div className="space-y-5">
-                        <div className="space-y-5">
-                            <div className="flex gap-4">
-                                <div className="flex-1">
-                                    <label className="text-sm font-semibold mb-1 block">Data</label>
-                                    <input
-                                        className="p-2 w-full rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
-                                        type="date"
-                                        onChange={obterData}
-                                        value={scheduleDate}
-                                        required
-                                    />
-                                </div>
+                        {/* Data */}
+                        <h1 className="text-2xl font-bold text-center mb-2">
+                            Horário agendado por para o dia {agendamentoAtual.dataFormatada} de {agendamentoAtual.horaEntradaFormatada} até {agendamentoAtual.horaSaidaFormatada} com valor total de {textoVerde(`R$ ${agendamentoAtual.valorTotal},00`)}</h1>
 
-                                <div className="flex-1">
-                                    <label className="text-sm font-semibold mb-1 block">Valor Total</label>
-                                    <input
-                                        className="p-2 w-full text-center rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC] bg-gray-50"
-                                        type="text"
-                                        disabled={true}
-                                        value={totalValue || 'Selecione os horários'}
-                                        readOnly
-                                    />
-                                </div>
-                            </div>
-
-                            <div>
-                                <label className="text-sm font-semibold mb-1 block">Horário</label>
-                                <div className="flex items-center gap-4">
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <Clock size={16} className="text-gray-500" />
-                                        <span className="text-sm text-gray-600">De</span>
-                                        <select
-                                            onChange={onSelectFirstValue}
-                                            value={firstValue}
-                                            className="p-2 w-3/4 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
-                                            required
-                                        >
-                                            <option value="">Selecione</option>
-                                            <option value="8">8:00</option>
-                                            <option value="9">9:00</option>
-                                            <option value="10">10:00</option>
-                                            <option value="11">11:00</option>
-                                            <option value="12">12:00</option>
-                                            <option value="13">13:00</option>
-                                            <option value="14">14:00</option>
-                                            <option value="15">15:00</option>
-                                            <option value="16">16:00</option>
-                                            <option value="17">17:00</option>
-                                            <option value="18">18:00</option>
-                                        </select>
-                                    </div>
-                                    <div className="flex items-center gap-2 flex-1">
-                                        <span className="text-sm text-gray-600">Até</span>
-                                        <select
-                                            onChange={onSelectSecondValue}
-                                            value={secondValue}
-                                            className="p-2 w-3/4 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
-                                            required
-                                        >
-                                            <option value="">Selecione</option>
-                                            <option value="9">9:00</option>
-                                            <option value="10">10:00</option>
-                                            <option value="11">11:00</option>
-                                            <option value="12">12:00</option>
-                                            <option value="13">13:00</option>
-                                            <option value="14">14:00</option>
-                                            <option value="15">15:00</option>
-                                            <option value="16">16:00</option>
-                                            <option value="17">17:00</option>
-                                            <option value="18">18:00</option>
-                                            <option value="19">19:00</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        {/* Linha divisória */}
                         <div className="border-t border-gray-400 my-2"></div>
 
+                        {/* Botões */}
                         <div className="flex gap-3 pt-2">
                             <button
-                                onClick={onSave}
-                                className="flex-1 bg-[#6142FC] text-white font-semibold py-3 rounded-3xl hover:bg-[#7357ff] transition flex items-center justify-center gap-2"
+                                onClick={cancelSchedule}
+                                className="flex-1 bg-[#6142FC] text-white font-medium py-3 rounded-3xl hover:bg-[#7357ff] transition flex items-center justify-center gap-2"
                             >
-                                Agendar
-                            </button>
-
-                            <button
-                                onClick={closeModal}
-                                className="flex-1 bg-red-600 text-white font-semibold py-2 rounded-full hover:bg-red-700 transition"
-                            >
-                                Cancelar
+                                Cancelar Agendamento
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
-        );
-    };
 
-    return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-2xl w-[450px] p-8 relative">
-                <button
-                    onClick={closeModal}
-                    className="absolute top-4 right-4 border border-[#6142FC] bg-[#6142FC] text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#7357ff] transition"
-                >
-                    <X size={18} />
-                </button>
-
-                {/* Título principal */}
-                <h1 className="text-2xl font-bold text-center mb-2">Agendamento</h1>
-
-                {/* Subtítulo */}
-                <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
-                    <span className="text-[#6142FC]">{studio.nome}</span>
-                </h2>
-
-                {/* Descrição do estúdio */}
-                <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <h3 className="text-sm font-semibold mb-2">Descrição:</h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                        {studio.descricao}
-                    </p>
-
-                    {/* Informações de contato */}
-                    <div className="mt-4 space-y-2">
-                        <div className="flex items-center gap-2 text-sm">
-                            <Phone size={14} className="text-gray-500" />
-                            <span className="font-medium">Telefone para contato:</span>
-                            <TelefoneFormatado telefone={studio.telefone} />
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                            <MapPin size={14} className="text-gray-500" />
-                            <span className="font-medium">Endereço:</span>
-                            <span className="text-gray-700">{studio.endereco}</span>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                            <MapPin size={14} className="text-gray-500" />
-                            <span className="font-medium">Valor por hora:</span>
-                            <span className="text-gray-700">{`R$ ${studio.valorDaHora},00`}</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Formulário de agendamento */}
-                <div className="space-y-5">
-                    {/* Data */}
-                    <h1 className="text-2xl font-bold text-center mb-2">{`Horário agendado para o dia ${agendamentoAtual.dataFormatada} de ${agendamentoAtual.horaEntradaFormatada} até ${agendamentoAtual.horaSaidaFormatada} com valor total de R$ ${agendamentoAtual.valorTotal},00`}</h1>
-
-                    {/* Linha divisória */}
-                    <div className="border-t border-gray-400 my-2"></div>
-
-                    {/* Botões */}
-                    <div className="flex gap-3 pt-2">
-                        <button
-                            onClick={cancelSchedule}
-                            className="flex-1 bg-[#6142FC] text-white font-medium py-3 rounded-3xl hover:bg-[#7357ff] transition flex items-center justify-center gap-2"
-                        >
-                            Cancelar Agendamento
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+            {/* Renderiza a modal de confirmação */}
+            <ConfirmModal />
+        </>
     );
 }
