@@ -99,7 +99,7 @@ function ModalUserSettings({ isOpen, closeModal, isMusicianUSer }) {
 
     // Função para executar o logout
     function executeLogout() {
-        localStorage.removeItem("user");
+        localStorage.removeItem("user");    
         localStorage.removeItem("studioLogged");
         setShowLogoutModal(false);
         closeModal();

@@ -8,7 +8,7 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
     const [totalValue, setTotalValue] = useState('');
     const [scheduleDate, setScheduleDate] = useState('');
     const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-
+    const [agendamentoAtual, setagendamentoAtual] = useState(JSON.parse(localStorage.getItem("agendamentoAtual")));
     function TelefoneFormatado({ telefone }) {
         const formatarTelefone = (numero) => {
             if (!numero) return '';
@@ -102,8 +102,8 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
 
             if (response.ok) {
                 // Usa a função de sucesso passada por prop
-                onSuccess();
-                
+                onSuccess('Agendamento realizado com sucesso!');
+
                 // Fecha o modal e limpa os campos
                 closeModal();
                 setFirstValue('');
@@ -113,6 +113,37 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
             } else {
                 const error = await response.text();
                 onError(`Erro ao agendar: ${error}`);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            onError('Erro ao conectar com o servidor.');
+        }
+    };
+
+    function cancelSchedule() {
+        return excluirAgendamento();
+    };
+
+    async function excluirAgendamento() {
+        try {
+            const response = await fetch(`https://localhost:7144/api/Agendamento/${agendamentoAtual.id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+
+            if (response.ok) {
+                onSuccess('Agendamento cancelado com sucesso!');
+                localStorage.removeItem("agendamentoAtual");
+                setFirstValue('');
+                setSecondValue('');
+                setTotalValue('');
+                setScheduleDate('');
+                closeModal();
+            } else {
+                const error = await response.text();
+                onError(`Erro ao excluir: ${error}`);
             }
         } catch (error) {
             console.error('Erro:', error);
@@ -283,16 +314,14 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
 
                 {/* Subtítulo */}
                 <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
-                    <span className="text-[#6142FC]">Studio 54</span>
+                    <span className="text-[#6142FC]">{studio.nome}</span>
                 </h2>
 
                 {/* Descrição do estúdio */}
                 <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <h3 className="text-sm font-semibold mb-2">Descrição:</h3>
                     <p className="text-sm text-gray-600 leading-relaxed">
-                        No coração da cena musical, o Studio 54 oferece um ambiente profissional
-                        e inspirador para artistas que buscam excelência. Com acústica premium e equipamentos
-                        de última geração, proporcionamos a qualidade sonora que sua música merece.
+                        {studio.descricao}
                     </p>
 
                     {/* Informações de contato */}
@@ -300,17 +329,17 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
                         <div className="flex items-center gap-2 text-sm">
                             <Phone size={14} className="text-gray-500" />
                             <span className="font-medium">Telefone para contato:</span>
-                            <span className="text-gray-700">(62) 9292-8932</span>
+                            <TelefoneFormatado telefone={studio.telefone} />
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                             <MapPin size={14} className="text-gray-500" />
                             <span className="font-medium">Endereço:</span>
-                            <span className="text-gray-700">Av Goiânia, N54 - GO</span>
+                            <span className="text-gray-700">{studio.endereco}</span>
                         </div>
                         <div className="flex items-center gap-2 text-sm">
                             <MapPin size={14} className="text-gray-500" />
                             <span className="font-medium">Valor por hora:</span>
-                            <span className="text-gray-700">R$ 100,00</span>
+                            <span className="text-gray-700">{`R$ ${studio.valorDaHora},00`}</span>
                         </div>
                     </div>
                 </div>
@@ -318,7 +347,7 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
                 {/* Formulário de agendamento */}
                 <div className="space-y-5">
                     {/* Data */}
-                    <h1 className="text-2xl font-bold text-center mb-2">Horário agendado para o dia 01/12/2025 de 14:00 até 18:00 com valor total de R$ 400,00</h1>
+                    <h1 className="text-2xl font-bold text-center mb-2">{`Horário agendado para o dia ${agendamentoAtual.dataFormatada} de ${agendamentoAtual.horaEntradaFormatada} até ${agendamentoAtual.horaSaidaFormatada} com valor total de R$ ${agendamentoAtual.valorTotal},00`}</h1>
 
                     {/* Linha divisória */}
                     <div className="border-t border-gray-400 my-2"></div>
@@ -326,7 +355,7 @@ export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento, onSuc
                     {/* Botões */}
                     <div className="flex gap-3 pt-2">
                         <button
-                            onClick={closeModal}
+                            onClick={cancelSchedule}
                             className="flex-1 bg-[#6142FC] text-white font-medium py-3 rounded-3xl hover:bg-[#7357ff] transition flex items-center justify-center gap-2"
                         >
                             Cancelar Agendamento

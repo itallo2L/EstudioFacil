@@ -13,16 +13,12 @@ function StudioList() {
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
 
-    const showSuccessToast = (message = 'Agendamento realizado com sucesso!') => {
+    const showSuccessToast = (message) => {
         toast.success(message);
     };
 
     const showErrorToast = (message) => {
         toast.error(message);
-    };
-
-    function salvarAgendamento() {
-
     };
 
     function onUserSettingsClick() {
@@ -52,6 +48,23 @@ function StudioList() {
             });
 
             const data = await response.json();
+            if (data && data.nomeResponsavel !== 'Não há agendamentos') {
+                return {
+                    ...data,
+                    // Formata data para dd/mm/yyyy
+                    dataFormatada: data.dataEHoraDeEntrada
+                        ? formatarDataParaBR(data.dataEHoraDeEntrada)
+                        : '',
+                    // Formata hora de entrada para hh:mm
+                    horaEntradaFormatada: data.dataEHoraDeEntrada
+                        ? formatarHoraParaBR(data.dataEHoraDeEntrada)
+                        : '',
+                    // Formata hora de saída para hh:mm
+                    horaSaidaFormatada: data.dataEHoraDeSaida
+                        ? formatarHoraParaBR(data.dataEHoraDeSaida)
+                        : ''
+                };
+            }
             return data;
         } catch (error) {
             console.error("Erro ao verificar agendamento:", error);
@@ -67,11 +80,26 @@ function StudioList() {
             ? setHaveAgendamento(false)
             : setHaveAgendamento(true);
 
+        localStorage.setItem("agendamentoAtual", JSON.stringify(agendamento));
         setIsModalDetailsOpen(true);
     };
 
-    function onEditStudioClick() {
-        setIsModalEditOpen(true);
+    // Funções auxiliares para formatação
+    const formatarDataParaBR = (dataISO) => {
+        if (!dataISO) return '';
+        const data = new Date(dataISO);
+        const dia = String(data.getDate()).padStart(2, '0');
+        const mes = String(data.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+        const ano = data.getFullYear();
+        return `${dia}/${mes}/${ano}`;
+    };
+
+    const formatarHoraParaBR = (dataISO) => {
+        if (!dataISO) return '';
+        const data = new Date(dataISO);
+        const horas = String(data.getHours()).padStart(2, '0');
+        const minutos = String(data.getMinutes()).padStart(2, '0');
+        return `${horas}:${minutos}`;
     };
 
     const addStudioToList = (newStudio) => {
@@ -84,11 +112,6 @@ function StudioList() {
         } : studio);
         setStudios(listWithUpdatedStudios);
         setIsModalDetailsOpen(false);
-    };
-
-    const deleteStudioFromList = (deletedStudio) => {
-        const newStudioList = studios.filter(studio => studio.id !== deletedStudio.id);
-        setStudios(newStudioList);
     };
 
     const reloadStudios = async () => {
@@ -320,7 +343,7 @@ function StudioList() {
                         studio={selectedStudio}
                         closeModal={() => setIsModalDetailsOpen(false)}
                         hasAgendamento={haveAgendamento}
-                        onSuccess={() => showSuccessToast()}
+                        onSuccess={(message) => showSuccessToast(message)}
                         onError={(message) => showErrorToast(message)}>
                     </ModalDetails>
                     <ModalAddStudio
