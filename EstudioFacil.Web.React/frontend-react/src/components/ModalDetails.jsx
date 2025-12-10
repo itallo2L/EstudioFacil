@@ -1,9 +1,123 @@
 import { X, Phone, MapPin, Clock } from "lucide-react";
+import { useState } from "react";
 
-export function ModalDetails({ isOpen, closeModal, onSave, hasAgendamento = false }) {
+export function ModalDetails({ isOpen, studio, closeModal, hasAgendamento }) {
+    const [firstValue, setFirstValue] = useState('');
+    const [secondValue, setSecondValue] = useState('');
+    const [totalValue, setTotalValue] = useState('');
+    const [scheduleDate, setScheduleDate] = useState('');
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+
+    function TelefoneFormatado({ telefone }) {
+        const formatarTelefone = (numero) => {
+            if (!numero) return '';
+            const numeros = numero.replace(/\D/g, '');
+            if (numeros.length === 11) {
+                return `(${numeros.substring(0, 2)}) ${numeros.substring(2, 7)}-${numeros.substring(7)}`;
+            } else if (numeros.length === 10) {
+                return `(${numeros.substring(0, 2)}) ${numeros.substring(2, 6)}-${numeros.substring(6)}`;
+            }
+            return numero;
+        };
+        return <span className="text-gray-700">{formatarTelefone(telefone)}</span>;
+    };
+
+    const onSelectFirstValue = (event) => {
+        const value = parseInt(event.target.value);
+        setFirstValue(value);
+        if (secondValue) {
+            calcularValorTotal(value, secondValue);
+        }
+    };
+
+    const onSelectSecondValue = (event) => {
+        const value = parseInt(event.target.value);
+        setSecondValue(value);
+        if (firstValue) {
+            calcularValorTotal(firstValue, value);
+        }
+    };
+
+    const calcularValorTotal = (inicio, fim) => {
+        const diferenca = fim - inicio;
+        const calculoFinal = diferenca * studio.valorDaHora;
+        setTotalValue(`R$ ${calculoFinal},00`);
+    };
+
+    const obterData = (event) => {
+        setScheduleDate(event.target.value);
+    };
+
+    // Função para formatar a data e hora para o formato ISO
+    const formatarDataHora = (data, hora) => {
+        if (!data || !hora) return '';
+
+        // Converte hora (8, 9, 10...) para formato HH:00:00
+        const horaFormatada = hora.toString().padStart(2, '0') + ':00:00';
+
+        // Retorna no formato ISO: yyyy-mm-ddTHH:mm:ss
+        return `${data}T${horaFormatada}`;
+    };
+
+    function extrairNumeroMonetario(valor) {
+        // Remove "R$" e espaços, depois divide pela vírgula
+        const partes = valor.replace('R$', '').trim().split(',');
+        return parseInt(partes[0].replace(/\./g, '')) || 0;
+    }
+
+    async function adicionarAgendamento() {
+        if (!scheduleDate || !firstValue || !secondValue) {
+            alert('Por favor, preencha todos os campos: data, horário de entrada e horário de saída.');
+            return;
+        }
+
+        if (secondValue <= firstValue) {
+            alert('O horário de saída deve ser maior que o horário de entrada.');
+            return;
+        }
+
+        const valorTotal = extrairNumeroMonetario(totalValue);
+
+        const dados = {
+            nomeResponsavel: user.nomeDoResponsavel,
+            cpfResponsavel: user.cpf,
+            dataEHoraDeEntrada: formatarDataHora(scheduleDate, firstValue),
+            dataEHoraDeSaida: formatarDataHora(scheduleDate, secondValue),
+            valorTotal: valorTotal,
+            idEstudio: studio.id
+        };
+
+        console.log('Dados enviados:', dados); // Para debug
+
+        try {
+            const response = await fetch("https://localhost:7144/api/Agendamento", {
+                method: 'PUT', // Verifique se é POST ou PUT
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(dados)
+            });
+
+            if (response.ok) {
+                alert('Agendamento realizado com sucesso!');
+                closeModal();
+            } else {
+                const error = await response.text();
+                alert(`Erro ao agendar: ${error}`);
+            }
+        } catch (error) {
+            console.error('Erro:', error);
+            alert('Erro ao conectar com o servidor.');
+        }
+    };
+
+    function onSave() {
+        adicionarAgendamento();
+    };
+
     if (!isOpen) return null;
 
-    if (hasAgendamento) {
+    if (!hasAgendamento) {
         return (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                 <div className="bg-white rounded-2xl w-[450px] p-8 relative">
@@ -14,71 +128,62 @@ export function ModalDetails({ isOpen, closeModal, onSave, hasAgendamento = fals
                         <X size={18} />
                     </button>
 
-                    {/* Título principal */}
                     <h1 className="text-2xl font-bold text-center mb-2">Agendamento</h1>
-
-                    {/* Subtítulo */}
                     <h2 className="text-lg font-semibold text-center text-gray-700 mb-6">
-                        Agendar horário em <span className="text-[#6142FC]">Studio 54</span>
+                        Agendar horário em <span className="text-[#6142FC]">{studio.nome}</span>
                     </h2>
 
-                    {/* Descrição do estúdio */}
                     <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <h3 className="text-sm font-semibold mb-2">Descrição:</h3>
                         <p className="text-sm text-gray-600 leading-relaxed">
-                            No coração da cena musical, o Studio 54 oferece um ambiente profissional
-                            e inspirador para artistas que buscam excelência. Com acústica premium e equipamentos
-                            de última geração, proporcionamos a qualidade sonora que sua música merece.
+                            {studio.descricao}
                         </p>
 
-                        {/* Informações de contato */}
                         <div className="mt-4 space-y-2">
                             <div className="flex items-center gap-2 text-sm">
                                 <Phone size={14} className="text-gray-500" />
                                 <span className="font-medium">Telefone para contato:</span>
-                                <span className="text-gray-700">(62) 9292-8932</span>
+                                <TelefoneFormatado telefone={studio.telefone} />
                             </div>
                             <div className="flex items-center gap-2 text-sm">
                                 <MapPin size={14} className="text-gray-500" />
                                 <span className="font-medium">Endereço:</span>
-                                <span className="text-gray-700">Av Goiânia, N54 - GO</span>
+                                <span className="text-gray-700">{studio.endereco}</span>
                             </div>
                             <div className="flex items-center gap-2 text-sm">
                                 <MapPin size={14} className="text-gray-500" />
                                 <span className="font-medium">Valor por hora:</span>
-                                <span className="text-gray-700">R$ 100,00</span>
+                                <span className="text-gray-700">{`R$ ${studio.valorDaHora},00`}</span>
                             </div>
                         </div>
                     </div>
 
-                    {/* Formulário de agendamento */}
                     <div className="space-y-5">
                         <div className="space-y-5">
-                            {/* Data e Valor Total lado a lado */}
                             <div className="flex gap-4">
-                                {/* Data */}
                                 <div className="flex-1">
                                     <label className="text-sm font-semibold mb-1 block">Data</label>
                                     <input
                                         className="p-2 w-full rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
                                         type="date"
+                                        onChange={obterData}
+                                        value={scheduleDate}
+                                        required
                                     />
                                 </div>
 
-                                {/* Valor Total */}
                                 <div className="flex-1">
                                     <label className="text-sm font-semibold mb-1 block">Valor Total</label>
                                     <input
                                         className="p-2 w-full text-center rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC] bg-gray-50"
                                         type="text"
                                         disabled={true}
-                                        // value="R$ 400,00"
+                                        value={totalValue || 'Selecione os horários'}
                                         readOnly
                                     />
                                 </div>
                             </div>
 
-                            {/* Horário */}
                             <div>
                                 <label className="text-sm font-semibold mb-1 block">Horário</label>
                                 <div className="flex items-center gap-4">
@@ -86,49 +191,53 @@ export function ModalDetails({ isOpen, closeModal, onSave, hasAgendamento = fals
                                         <Clock size={16} className="text-gray-500" />
                                         <span className="text-sm text-gray-600">De</span>
                                         <select
+                                            onChange={onSelectFirstValue}
+                                            value={firstValue}
                                             className="p-2 w-3/4 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                            required
                                         >
-                                            <option value=""></option>
-                                            <option>8:00</option>
-                                            <option>9:00</option>
-                                            <option>10:00</option>
-                                            <option>11:00</option>
-                                            <option>12:00</option>
-                                            <option>13:00</option>
-                                            <option>14:00</option>
-                                            <option>15:00</option>
-                                            <option>16:00</option>
-                                            <option>17:00</option>
-                                            <option>18:00</option>
+                                            <option value="">Selecione</option>
+                                            <option value="8">8:00</option>
+                                            <option value="9">9:00</option>
+                                            <option value="10">10:00</option>
+                                            <option value="11">11:00</option>
+                                            <option value="12">12:00</option>
+                                            <option value="13">13:00</option>
+                                            <option value="14">14:00</option>
+                                            <option value="15">15:00</option>
+                                            <option value="16">16:00</option>
+                                            <option value="17">17:00</option>
+                                            <option value="18">18:00</option>
                                         </select>
                                     </div>
                                     <div className="flex items-center gap-2 flex-1">
                                         <span className="text-sm text-gray-600">Até</span>
                                         <select
+                                            onChange={onSelectSecondValue}
+                                            value={secondValue}
                                             className="p-2 w-3/4 rounded-3xl border border-[#6142FC] focus:outline-none focus:border-[#6142FC] focus:ring-1 focus:ring-[#6142FC]"
+                                            required
                                         >
-                                            <option value=""></option>
-                                            <option>8:00</option>
-                                            <option>9:00</option>
-                                            <option>10:00</option>
-                                            <option>11:00</option>
-                                            <option>12:00</option>
-                                            <option>13:00</option>
-                                            <option>14:00</option>
-                                            <option>15:00</option>
-                                            <option>16:00</option>
-                                            <option>17:00</option>
-                                            <option>18:00</option>
+                                            <option value="">Selecione</option>
+                                            <option value="9">9:00</option>
+                                            <option value="10">10:00</option>
+                                            <option value="11">11:00</option>
+                                            <option value="12">12:00</option>
+                                            <option value="13">13:00</option>
+                                            <option value="14">14:00</option>
+                                            <option value="15">15:00</option>
+                                            <option value="16">16:00</option>
+                                            <option value="17">17:00</option>
+                                            <option value="18">18:00</option>
+                                            <option value="19">19:00</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Linha divisória */}
                         <div className="border-t border-gray-400 my-2"></div>
 
-                        {/* Botões */}
                         <div className="flex gap-3 pt-2">
                             <button
                                 onClick={onSave}

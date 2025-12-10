@@ -59,5 +59,10 @@ namespace EstudioFacil.Testes.RepositorioMock
             }
             return listaAgendamento;
         }
+
+        public Agendamento ObterAgendamentoPorEstudio(AuxiliarDosAgendamentos auxiliar)
+        {
+            return new Agendamento() { };
+        }
     }
 }

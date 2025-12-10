@@ -25,7 +25,7 @@ namespace EstudioFacil.Web.React.InjecaoDeDependencia
                 .ConfigureRunner(rb => rb
                     .AddSqlServer()
                     .WithGlobalConnectionString(stringDeConexao)
-                    .ScanIn(typeof(_20240715092000_AdicionarEstudioMusical).Assembly).For.Migrations())
+                    .ScanIn(typeof(_20251209140300_AdicionarEstudioMusical).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
 

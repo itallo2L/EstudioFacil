@@ -1,4 +1,6 @@
-﻿using EstudioFacil.Dominio.InterfacesRepositorio;
+﻿using EstudioFacil.Dominio.Entidades;
+using EstudioFacil.Dominio.InterfacesRepositorio;
+using EstudioFacil.Dominio.Servicos;
 using EstudioFacil.Dominio.Usuarios;
 using LinqToDB;
 using System.Linq;
@@ -8,14 +10,33 @@ namespace EstudioFacil.Infra.Repositorios
     public class RepositorioUsuario : IRepositorioUsuario
     {
         private readonly BdEstudioFacil _bd;
+        private readonly ServicoEstudioMusical _servicoEstudioMusical;
 
-        public RepositorioUsuario(BdEstudioFacil bdEstudioFacil)
+        public RepositorioUsuario(BdEstudioFacil bdEstudioFacil, ServicoEstudioMusical servicoEstudioMusical)
         {
+            servicoEstudioMusical = _servicoEstudioMusical;
             _bd = bdEstudioFacil;
         }
 
         public void AdicionarUsuario(Usuario usuario)
         {
+            if (usuario.EhUsuarioMusico)
+            {
+                _bd.Insert(usuario);
+                return;
+            };
+
+            var estudio = new EstudioMusical()
+            {
+                Nome = usuario.RazaoSocial,
+                EstaAberto = false,
+                ValorDaHora = 0,
+                Endereco = usuario.Endereco,
+                Telefone = usuario.Telefone,
+                Descricao = string.Empty
+            };
+
+            usuario.IdDoEstudio = _bd.InsertWithInt32Identity(estudio);
             _bd.Insert(usuario);
         }
 

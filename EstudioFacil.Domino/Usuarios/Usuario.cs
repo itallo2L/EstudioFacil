@@ -27,5 +27,7 @@ namespace EstudioFacil.Dominio.Usuarios
         public string CPF { get; set; } = string.Empty;
         [Column]
         public string CNPJ { get; set; } = string.Empty;
+        [Column]
+        public int? IdDoEstudio { get; set; }
     }
 }

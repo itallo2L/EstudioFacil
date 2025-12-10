@@ -2,8 +2,8 @@
 
 namespace EstudioFacil.Infra.Migracoes
 {
-    [Migration(20251028135000)]
-    public class _20251028135000_AdicionarUsuario : Migration
+    [Migration(20251209140400)]
+    public class _20251209140400_AdicionarUsuario : Migration
     {
         public override void Up()
         {
@@ -18,7 +18,8 @@ namespace EstudioFacil.Infra.Migracoes
                 .WithColumn("Telefone").AsString()
                 .WithColumn("NomeDoResponsavel").AsString()
                 .WithColumn("CPF").AsString()
-                .WithColumn("CNPJ").AsString();
+                .WithColumn("CNPJ").AsString()
+                .WithColumn("IdDoEstudio").AsInt64().Nullable();
         }
 
         public override void Down()

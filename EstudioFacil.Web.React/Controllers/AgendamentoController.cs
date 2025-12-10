@@ -48,5 +48,11 @@ namespace EstudioFacil.Web.React.Controllers
             _servicoAgendamento.Deletar(id);
             return NoContent();
         }
+
+        [HttpPatch("obter-agendamento-por-estudio")]
+        public IActionResult ObterAgendamentoPorEstudio([FromBody] AuxiliarDosAgendamentos auxiliar)
+        {
+            return Ok(_servicoAgendamento.ObterAgendamentoPorEstudio(auxiliar));
+        }
     }
 }

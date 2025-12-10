@@ -61,9 +61,9 @@ namespace EstudioFacil.Servico.Validacoes
                 .IsInEnum()
                 .WithMessage("O Estilo Musical não foi encontrado, digite um Estilo Musical válido.");
 
-            RuleFor(Agendamento => Agendamento)
-                .Must(agendamento => VerificarEnumIndefinido(agendamento.EstiloMusical) != VerificarEnumIndefinido(EstiloMusical.EnumIndefinido))
-                .WithMessage("Estilo Musical indefinido, por favor defina o Estilo Musical.");
+            //RuleFor(Agendamento => Agendamento)
+            //    .Must(agendamento => VerificarEnumIndefinido(agendamento.EstiloMusical) != VerificarEnumIndefinido(EstiloMusical.EnumIndefinido))
+            //    .WithMessage("Estilo Musical indefinido, por favor defina o Estilo Musical.");
         }
 
         public static bool VerificarEnumIndefinido(EstiloMusical enumIndefinido)

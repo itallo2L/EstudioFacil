@@ -5,7 +5,6 @@ import ModalEditStudio from "../components/ModalEditStudio"
 import ModalUserSettings from "../components/ModalUserSettings"
 import Status from "../components/Status"
 import { ChevronLeft, Settings, ArrowDownUp, Calendar } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 function StudioList() {
     const [studios, setStudios] = useState([
@@ -21,14 +20,40 @@ function StudioList() {
     const [isModalEditOpen, setIsModalEditOpen] = useState(false);
     const [isModalSettingsOpen, setIsModalSettingsOpen] = useState(false);
     const [selectedStudio, setSelectedStudio] = useState(null);
+    const [haveAgendamento, setHaveAgendamento] = useState(null);
 
-    function onSeeDetailsClick(studio) {
-        setSelectedStudio(studio);
-        setIsModalDetailsOpen(true);
+    const checkAgendamento = async (studio) => {
+        try {
+            const usuarioLogged = JSON.parse(localStorage.getItem("user"));
+            const auxiliar = {
+                nomeDoResponsavel: usuarioLogged.nomeDoResponsavel,
+                idDoEstudio: studio.id
+            };
+
+            const response = await fetch(
+                `https://localhost:7144/api/Agendamento/obter-agendamento-por-estudio`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(auxiliar),
+            });
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error("Erro ao verificar agendamento:", error);
+            return { possuiAgendamento: false };
+        }
     };
 
-    function onAddStudioClick() {
-        setIsModalAdditionOpen(true);
+    // Função modificada para verificar agendamento ao clicar
+    const onSeeDetailsClick = async (studio) => {
+        setSelectedStudio(studio);
+        const agendamento = await checkAgendamento(studio);
+        (agendamento.nomeResponsavel == 'Não há agendamentos')
+            ? setHaveAgendamento(false)
+            : setHaveAgendamento(true);
+
+        setIsModalDetailsOpen(true);
     };
 
     function onEditStudioClick() {
@@ -242,6 +267,12 @@ function StudioList() {
                                     >
                                         Maior valor
                                     </button>
+                                    <button
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 font-serif"
+                                        onClick={() => handleSortSelect("")}
+                                    >
+                                        Limpar Ordenação
+                                    </button>
                                 </div>
                             )}
                         </div>
@@ -277,7 +308,7 @@ function StudioList() {
                         onStudioDelete={deleteStudioFromList}
                         onReloadStudios={reloadStudios}
                         onEditStudioClick={onEditStudioClick}
-                        hasAgendamento={false}>
+                        hasAgendamento={haveAgendamento}>
                     </ModalDetails>
                     <ModalAddStudio
                         isOpen={isModalAdditionOpen}

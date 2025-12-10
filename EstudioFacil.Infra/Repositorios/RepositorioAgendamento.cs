@@ -65,5 +65,19 @@ namespace EstudioFacil.Infra.Repositorios
 
             return listaAgendamento.ToList();
         }
+
+        public Agendamento ObterAgendamentoPorEstudio(AuxiliarDosAgendamentos auxiliar)
+        {
+            var agendamento =  _bd
+                .GetTable<Agendamento>()
+                .AsQueryable()
+                .Where(a => 
+                    a.IdEstudio == auxiliar.IdDoEstudio 
+                    || a.NomeResponsavel == auxiliar.NomeDoResponsavel)
+                .FirstOrDefault()
+                ?? new Agendamento() { NomeResponsavel = "Não há agendamentos" };
+
+            return agendamento;
+        }
     }
 }

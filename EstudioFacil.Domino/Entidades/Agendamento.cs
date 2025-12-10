@@ -20,7 +20,7 @@ namespace EstudioFacil.Dominio.Entidades
         [Column]
         public decimal ValorTotal { get; set; }
         [Column]
-        public EstiloMusical EstiloMusical { get; set; }
+        public EstiloMusical? EstiloMusical { get; set; }
         [Column]
         public int IdEstudio { get; set; }
     }

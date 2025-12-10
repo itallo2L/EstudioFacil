@@ -13,6 +13,7 @@ namespace EstudioFacil.Testes.RepositorioMock
         {
             _instanciaEstudioMusical = EstudioMusicalSingleton.InstanciaEstudioMusical;
         }
+
         public void Adicionar(EstudioMusical estudioMusical)
         {
             _instanciaEstudioMusical.Add(estudioMusical);

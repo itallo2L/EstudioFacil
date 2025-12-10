@@ -11,6 +11,9 @@ function ScheduleList() {
     const [studios, setStudios] = useState([
         JSON.parse(localStorage.getItem("studios")) || []
     ]);
+    const [studio, setStudio] = useState([
+        JSON.parse(localStorage.getItem("studio")) || []
+    ]);
 
     function onUserSettingsClick() {
         setIsModalSettingsOpen(true);
@@ -205,10 +208,10 @@ function ScheduleList() {
 
                                 {(search || startDate || endDate || sortBy) && (
                                     <button
-                                        className="p-2 text-sm text-red-500 hover:text-red-700 font-semibold font-serif"
+                                        className="flex items-center gap-2 bg-[#6142FC] text-white px-4 py-2 rounded-3xl hover:bg-[#7357ff] font-serif"
                                         onClick={clearAllFilters}
                                     >
-                                        Limpar Filtros
+                                        Limpar
                                     </button>
                                 )}
                             </div>

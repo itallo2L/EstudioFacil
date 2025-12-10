@@ -80,5 +80,10 @@ namespace EstudioFacil.Servico.Servicos
         {
             return _repositorioAgendamento.ObterTodos(filtro);
         }
+
+        public Agendamento ObterAgendamentoPorEstudio(AuxiliarDosAgendamentos auxiliar = null)
+        {
+            return _repositorioAgendamento.ObterAgendamentoPorEstudio(auxiliar);
+        }
     }
 }

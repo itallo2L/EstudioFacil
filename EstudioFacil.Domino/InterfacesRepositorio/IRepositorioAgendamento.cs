@@ -11,5 +11,6 @@ namespace EstudioFacil.Dominio.InterfacesRepositorio
         void Atualizar(Agendamento agendamentoParaAtualizar);
         void Deletar(int id);
         Agendamento ObterPorId(int id);
+        Agendamento ObterAgendamentoPorEstudio(AuxiliarDosAgendamentos auxiliar);
     }
 }
