@@ -2,8 +2,8 @@
 
 namespace EstudioFacil.Infra.Migracoes
 {
-    [Migration(20240715092200)]
-    public class _20240715092200_AdicionarAgendamento : Migration
+    [Migration(20251209140500)]
+    public class _20251209140500_AdicionarAgendamento : Migration
     {
         public override void Up()
         {
@@ -14,7 +14,9 @@ namespace EstudioFacil.Infra.Migracoes
                 .WithColumn("DataEHoraDeEntrada").AsDateTime().NotNullable()
                 .WithColumn("DataEHoraDeSaida").AsDateTime().NotNullable()
                 .WithColumn("ValorTotal").AsDecimal().NotNullable()
-                .WithColumn("EstiloMusical").AsInt32()
+                .WithColumn("EstiloMusical").AsInt32().Nullable()
+                .WithColumn("Telefone").AsString().Nullable()
+                .WithColumn("Endereco").AsString().Nullable()
                 .WithColumn("IdEstudio").AsInt64().ForeignKey("EstudioMusical", "Id").OnDeleteOrUpdate(System.Data.Rule.Cascade);
         }
 

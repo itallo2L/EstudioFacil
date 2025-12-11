@@ -53,7 +53,7 @@ namespace EstudioFacil.Infra.Repositorios
 
                 if (filtro?.EstaFechado == true)
                     listaEstudioMusical = listaEstudioMusical.Where(estudioMusical => estudioMusical.EstaAberto != filtro.EstaFechado);
-            }
+            };
 
             return listaEstudioMusical.ToList();
         }

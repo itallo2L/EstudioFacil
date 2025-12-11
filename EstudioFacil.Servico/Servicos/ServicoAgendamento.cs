@@ -32,7 +32,7 @@ namespace EstudioFacil.Servico.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public void Atualizar(Agendamento agendamentoParaAtualizar)
@@ -49,7 +49,7 @@ namespace EstudioFacil.Servico.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public void Deletar(int id)
@@ -61,7 +61,7 @@ namespace EstudioFacil.Servico.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public Agendamento ObterPorId(int id)
@@ -73,12 +73,17 @@ namespace EstudioFacil.Servico.Servicos
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            };
         }
 
         public List<Agendamento> ObterTodos(FiltroAgendamento? filtro = null)
         {
             return _repositorioAgendamento.ObterTodos(filtro);
+        }
+
+        public Agendamento ObterAgendamentoPorEstudio(AuxiliarDosAgendamentos auxiliar = null)
+        {
+            return _repositorioAgendamento.ObterAgendamentoPorEstudio(auxiliar);
         }
     }
 }

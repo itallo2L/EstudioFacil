@@ -25,7 +25,7 @@ namespace EstudioFacil.Web.React.InjecaoDeDependencia
                 .ConfigureRunner(rb => rb
                     .AddSqlServer()
                     .WithGlobalConnectionString(stringDeConexao)
-                    .ScanIn(typeof(_20240715092000_AdicionarEstudioMusical).Assembly).For.Migrations())
+                    .ScanIn(typeof(_20251209140300_AdicionarEstudioMusical).Assembly).For.Migrations())
                 .AddLogging(lb => lb.AddFluentMigratorConsole())
                 .BuildServiceProvider(false);
 
@@ -34,8 +34,10 @@ namespace EstudioFacil.Web.React.InjecaoDeDependencia
 
             construtor.Services.AddScoped<ServicoEstudioMusical>();
             construtor.Services.AddScoped<ServicoAgendamento>();
+            construtor.Services.AddScoped<ServicoDeUsuarios>();
             construtor.Services.AddScoped<IRepositorioAgendamento, RepositorioAgendamento>();
             construtor.Services.AddScoped<IRepositorioEstudioMusical, RepositorioEstudioMusical>();
+            construtor.Services.AddScoped<IRepositorioUsuario, RepositorioUsuario>();
             construtor.Services.AddScoped<IValidator<EstudioMusical>, ValidadorEstudioMusical>();
             construtor.Services.AddScoped<IValidator<Agendamento>, ValidadorAgendamento>();
 
