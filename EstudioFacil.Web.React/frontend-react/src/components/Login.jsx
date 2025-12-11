@@ -36,19 +36,19 @@ function Login() {
     // Função para validar campos
     const validateFields = () => {
         const newErrors = {};
-        
+
         if (!userEmail.trim()) {
             newErrors.userEmail = "Endereço de email é obrigatório";
         } else if (!validateEmail(userEmail)) {
             newErrors.userEmail = "Email inválido";
         }
-        
+
         if (!userPassword.trim()) {
             newErrors.userPassword = "Senha é obrigatória";
         } else if (userPassword.length < 6) {
             newErrors.userPassword = "Senha deve ter pelo menos 6 caracteres";
         }
-        
+
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
@@ -70,7 +70,7 @@ function Login() {
 
             if (!response.ok) {
                 let errorMessage = "Erro ao fazer login";
-                
+
                 try {
                     const errorData = await response.json();
                     // Tenta extrair a mensagem do erro do backend
@@ -95,14 +95,14 @@ function Login() {
                         errorMessage = "Erro no servidor. Tente novamente mais tarde.";
                     }
                 }
-                
+
                 throw new Error(errorMessage);
             }
 
             const data = await response.json();
             setUser(data);
             localStorage.setItem("user", JSON.stringify(data));
-            
+
             if (data.ehUsuarioMusico) {
                 navigate("/studio");
             } else {
@@ -113,11 +113,11 @@ function Login() {
                             method: "GET",
                         }
                     );
-                    
+
                     if (!responseStudio.ok) {
                         throw new Error("Erro ao obter dados do estúdio");
                     }
-                    
+
                     const dataStudio = await responseStudio.json();
                     localStorage.setItem("studioLogged", JSON.stringify(dataStudio));
                     navigate("/schedule");
@@ -139,8 +139,8 @@ function Login() {
     // Estilos para inputs com erro
     const getInputClass = (fieldName) => {
         const baseClass = "w-full p-2 rounded-full border focus:outline-none focus:ring-1";
-        return errors[fieldName] 
-            ? `${baseClass} border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50` 
+        return errors[fieldName]
+            ? `${baseClass} border-red-500 focus:border-red-500 focus:ring-red-500 bg-red-50`
             : `${baseClass} border-[#6142FC] focus:border-[#6142FC] focus:ring-[#6142FC]`;
     };
 
@@ -155,14 +155,14 @@ function Login() {
         <div className="w-screen h-screen flex items-center justify-end gap-20 
              bg-cover bg-center bg-no-repeat font-serif"
             style={{ backgroundImage: `url('https://i.pinimg.com/736x/0f/2e/16/0f2e16f0b0639640b32c76c416c543b0.jpg')` }}>
-            
+
             {/* Modal de Erro */}
             {showErrorModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
                         <div className="flex justify-between items-center mb-4">
                             <h3 className="text-xl font-bold text-red-600">Erro no Login</h3>
-                            <button 
+                            <button
                                 onClick={closeErrorModal}
                                 className="text-gray-500 hover:text-gray-700 text-2xl"
                             >
@@ -181,11 +181,40 @@ function Login() {
                     </div>
                 </div>
             )}
-            
+
+            {/* <div className="flex flex-col items-start w-5/12 mb-32 mr-20">
+                <p className="p-2 h-8 flex items-center font-bold text-black text-4xl">Boas-vindas</p>
+                <p className="p-2 mb-20 h-8 flex items-center font-bold text-black text-4xl">ao</p>
+                <p className="p-2 h-8 flex items-center font-bold text-black text-8xl">
+                    Estúdio Fácil
+                </p>
+            </div> */}
+
             <div className="flex flex-col items-start w-5/12 mb-32 mr-20">
-                <p className="p-2 h-8 flex items-center font-bold text-white text-2xl">Boas-vindas</p>
-                <p className="p-2 mb-2 h-8 flex items-center font-bold text-white text-2xl">ao</p>
-                <p className="p-2 h-8 flex items-center font-bold text-white text-6xl">
+                <p className="p-2 h-8 flex items-center font-bold text-white text-4xl"
+                    style={{
+                        textShadow: `
+               0 0 5px #6142FC
+           `
+                    }}>
+                    Boas-vindas
+                </p>
+
+                <p className="p-2 mb-20 h-8 flex items-center font-bold text-white text-4xl"
+                    style={{
+                        textShadow: `
+               0 0 5px #6142FC
+           `
+                    }}>
+                    ao
+                </p>
+
+                <p className="p-2 h-8 flex items-center font-bold text-white text-8xl"
+                    style={{
+                        textShadow: `
+               0 0 5px #6142FC
+           `
+                    }}>
                     Estúdio Fácil
                 </p>
             </div>
@@ -195,7 +224,7 @@ function Login() {
                     <div className="flex justify-center">
                         <p className="p-2 mb-16 h-8 flex items-center font-mono font-bold text-3xl">Faça o login</p>
                     </div>
-                    
+
                     {/* Email */}
                     <div className="flex">
                         <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Endereço de email</p>
@@ -207,7 +236,7 @@ function Login() {
                                 setUserEmail(e.target.value);
                                 // Limpa erro ao digitar
                                 if (errors.userEmail) {
-                                    setErrors(prev => ({...prev, userEmail: undefined}));
+                                    setErrors(prev => ({ ...prev, userEmail: undefined }));
                                 }
                             }}
                             onKeyPress={handleKeyPress}
@@ -219,7 +248,7 @@ function Login() {
                     {errors.userEmail && (
                         <p className="text-red-500 text-sm mb-2 -mt-3 ml-2">{errors.userEmail}</p>
                     )}
-                    
+
                     {/* Senha */}
                     <div className="flex">
                         <p className="p-2 mb-2 h-8 flex items-center font-mono font-bold text-xl">Senha</p>
@@ -231,7 +260,7 @@ function Login() {
                                 setUserPassword(e.target.value);
                                 // Limpa erro ao digitar
                                 if (errors.userPassword) {
-                                    setErrors(prev => ({...prev, userPassword: undefined}));
+                                    setErrors(prev => ({ ...prev, userPassword: undefined }));
                                 }
                             }}
                             onKeyPress={handleKeyPress}
@@ -242,20 +271,19 @@ function Login() {
                     {errors.userPassword && (
                         <p className="text-red-500 text-sm mb-2 mt-1 ml-2">{errors.userPassword}</p>
                     )}
-                    
+
                     {/* Esqueci senha */}
                     <div className="flex mb-4 mt-4">
                         <a className="hover:underline hover:text-[#144B6F] text-[#6142FC]" href="http://localhost:5173/resetPassword">
                             Esqueceu sua senha?
                         </a>
                     </div>
-                    
+
                     {/* Botão de Entrar */}
                     <div className="flex mb-6">
                         <button
-                            className={`w-full bg-[#6142FC] flex justify-center p-3 rounded-full text-2xl font-mono font-bold text-white ${
-                                isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#7357ff]'
-                            }`}
+                            className={`w-full bg-[#6142FC] flex justify-center p-3 rounded-full text-2xl font-mono font-bold text-white ${isLoading ? 'opacity-70 cursor-not-allowed' : 'hover:bg-[#7357ff]'
+                                }`}
                             onClick={onOpenStudioList}
                             disabled={isLoading}
                         >
@@ -272,9 +300,9 @@ function Login() {
                             )}
                         </button>
                     </div>
-                    
+
                     <div className="flex bg-slate-900 w-96 h-[1px] mb-8"></div>
-                    
+
                     {/* Link para criar conta */}
                     <div className="flex justify-center">
                         <a className="hover:underline hover:text-[#144B6F] text-[#6142FC]" href="http://localhost:5173/chooseAccountType">
